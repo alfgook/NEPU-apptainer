@@ -4,6 +4,9 @@
 #       CONFIGURATION VARIABLES
 ##################################################
 
+username="user"
+password="pw"
+
 instpath="/home/install"
 
 instpath_R="$instpath/Rpackages"
@@ -165,23 +168,23 @@ Rscript --no-save --vanilla "$Rfile"
 ##################################################
 
 # create user and their home directory
-useradd user 
-echo user:pw | chpasswd
-mkdir /home/user
+useradd "$username" 
+echo "$username:$password" | chpasswd
+mkdir "/home/$username"
 
 # enable new ssh connection without authenticity warning
-mkdir "/home/user/.ssh"
-echo "StrictHostKeyChecking=accept-new" >> "/home/user/.ssh/config"
-chmod 400 "/home/user/.ssh/config"
+mkdir "/home/$username/.ssh"
+echo "StrictHostKeyChecking=accept-new" >> "/home/$username/.ssh/config"
+chmod 400 "/home/$username/.ssh/config"
 
 # download pipeline
-cd /home/user
+cd "/home/$username"
 git clone https://github.com/gschnabel/eval-fe56.git
-sed -i 's/calcdir_loc *<- *"[^"]*"/calcdir_loc <- "\/home\/user\/calcdir"/' "eval-fe56/config.R"
+sed -i 's/calcdir_loc *<- *"[^"]*"/calcdir_loc <- "\/home\/'"$username"'\/calcdir"/' "eval-fe56/config.R"
 
 # create an exemplary calculation directory
-mkdir /home/user/calcdir
+mkdir "/home/$username/calcdir"
 
 # make the user owner of their home direcotyr
-chown -R user:user /home/user
+chown -R "$username:$username" "/home/$username"
 
