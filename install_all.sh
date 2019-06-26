@@ -54,6 +54,7 @@ apt install -yq vim
 apt install -yq git
 apt install -yq sshpass
 apt install -yq rsync
+apt install -yq openssh-server
 
 apt install -yq r-base
 
