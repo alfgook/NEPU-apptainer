@@ -190,3 +190,6 @@ mkdir "/home/$username/calcdir"
 # make the user owner of their home direcotyr
 chown -R "$username:$username" "/home/$username"
 
+# set bash as default shell for the user
+chsh --shell /bin/bash "$username"
+
