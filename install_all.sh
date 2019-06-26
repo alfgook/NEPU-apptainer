@@ -45,6 +45,8 @@ mkdir "$instpath_downloads"
 
 apt install -yq apt-utils
 apt install -yq lib32readline7
+apt install -yq libxml2
+apt install -yq libxml2-dev
 apt install -yq libssl-dev
 apt install -yq libsasl2-dev
 apt install -yq gdebi-core
