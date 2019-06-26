@@ -85,6 +85,7 @@ instpkg_cran Rcpp
 instpkg_cran mongolite
 instpkg_cran digest
 instpkg_cran ggplot2
+instpkg_cran mvtnorm
 
 # install custom packages not on cran
 
