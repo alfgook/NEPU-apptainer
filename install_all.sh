@@ -186,6 +186,8 @@ chmod 400 "/home/$username/.ssh/config"
 cd "/home/$username"
 git clone https://github.com/gschnabel/eval-fe56.git
 sed -i 's/calcdir_loc *<- *"[^"]*"/calcdir_loc <- "\/home\/'"$username"'\/calcdir"/' "eval-fe56/config.R"
+sed -i 's/rootpath *<- *"[^"]*"/rootpath <- "\/home\/'"$username"'\/eval-fe56"/' "eval-fe56/config.R"
+sed -i 's/setwd("[^"]*")/setwd("\/home\/'"$username"'\/eval-fe56")/' "eval-fe56/run_pipeline.R"
 
 # create an exemplary calculation directory
 mkdir "/home/$username/calcdir"
