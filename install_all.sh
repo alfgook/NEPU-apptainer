@@ -4,8 +4,8 @@
 #       CONFIGURATION VARIABLES
 ##################################################
 
-username="myuser"
-password="mypw"
+username="mygeorg"
+password="mymypw"
 
 instpath="/home/$username/install"
 talysurl="ftp://ftp.nrg.eu/pub/www/talys/talys.tar"
@@ -70,6 +70,8 @@ apt install -yq sshpass
 apt install -yq rsync
 apt install -yq openssh-server
 
+apt install -yq locales
+sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
 
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 echo "deb [ arch=amd64 ] https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r-project-3.5.list
