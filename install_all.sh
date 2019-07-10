@@ -4,10 +4,19 @@
 #       CONFIGURATION VARIABLES
 ##################################################
 
-username="user"
-password="pw"
+username="myuser"
+password="mypw"
 
-instpath="/home/install"
+instpath="/home/$username/install"
+talysurl="ftp://ftp.nrg.eu/pub/www/talys/talys.tar"
+
+# installation files to keep
+keep_Rcodes="yes"
+keep_exfor="no"
+
+##################################################
+#       SPECIFIC INSTALLATION PATHS 
+##################################################
 
 instpath_R="$instpath/Rpackages"
 instpath_R2="$instpath/Rcode"
@@ -33,7 +42,7 @@ apt update
 #       CREATE DIRECTORIES
 ##################################################
 
-mkdir "$instpath"
+mkdir -p "$instpath"
 mkdir "$instpath_DL"
 mkdir "$instpath_R"
 mkdir "$instpath_R2"
@@ -179,22 +188,66 @@ mkdir "/home/$username"
 
 # enable new ssh connection without authenticity warning
 mkdir "/home/$username/.ssh"
+chmod 700 "/home/$username/.ssh"
 echo "StrictHostKeyChecking=accept-new" >> "/home/$username/.ssh/config"
 chmod 400 "/home/$username/.ssh/config"
+
+# enable password-less ssh within the container
+ssh-keygen -t rsa -N "" -f "/home/$username/.ssh/id_rsa"
+cat "/home/$username/.ssh/id_rsa.pub" >> "/home/$username/.ssh/authorized_keys" 
+chmod 600 "/home/$username/.ssh/id_rsa.pub"
+chmod 600 "/home/$username/.ssh/authorized_keys"
 
 # download pipeline
 cd "/home/$username"
 git clone https://github.com/gschnabel/eval-fe56.git
+sed -i 's/ssh_login *<- *"[^"]*"/ssh_login <- "'"${username}"'@localhost"/' "eval-fe56/config.R"
 sed -i 's/calcdir_loc *<- *"[^"]*"/calcdir_loc <- "\/home\/'"$username"'\/calcdir"/' "eval-fe56/config.R"
+sed -i 's/calcdir_rem *<- *"[^"]*"/calcdir_rem <- "\/home\/'"$username"'\/remcalcdir"/' "eval-fe56/config.R"
 sed -i 's/rootpath *<- *"[^"]*"/rootpath <- "\/home\/'"$username"'\/eval-fe56"/' "eval-fe56/config.R"
 sed -i 's/setwd("[^"]*")/setwd("\/home\/'"$username"'\/eval-fe56")/' "eval-fe56/run_pipeline.R"
 
 # create an exemplary calculation directory
 mkdir "/home/$username/calcdir"
+mkdir "/home/$username/remcalcdir"
 
-# make the user owner of their home direcotyr
+##################################################
+#       INSTALL TALYS 
+##################################################
+
+cd "$instpath"
+wget "$talysurl"
+tar -C "/home/$username/" -xf "talys.tar"
+cd "/home/$username/talys"
+./talys.setup
+
+##################################################
+#       FINAL ACTIONS 
+##################################################
+
+# delete installation files
+rm -rf "$instpath_DL"
+rm -rf "$instpath/talys.tar"
+if [ "$keep_exfor" != "yes" ]; then
+    rm -rf "$instpath_exfor"
+else
+    mv "$instpath_exfor_text" "$instpath/exfortmp"
+    rm -rf "$instpath_exfor"
+    mv "$instpath/exfortmp" "$instpath_exfor"
+fi
+
+if [ "$keep_Rcodes" != "yes" ]; then
+    rm -rf "$instpath_R"
+    rm -rf "$instpath_R2"
+fi
+
+
+# make the user owner of their home directory
 chown -R "$username:$username" "/home/$username"
+# make the user owner of the installation files
+chown -R "$username:$username" "$instpath"
 
 # set bash as default shell for the user
 chsh --shell /bin/bash "$username"
+
 
