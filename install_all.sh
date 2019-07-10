@@ -215,11 +215,14 @@ mkdir "/home/$username/remcalcdir"
 #       INSTALL TALYS 
 ##################################################
 
-cd "$instpath"
-wget "$talysurl"
-tar -C "/home/$username/" -xf "talys.tar"
-cd "/home/$username/talys"
-./talys.setup
+if [ ! -z "$talysurl" ]; then
+    cd "$instpath"
+    wget "$talysurl"
+    tar -C "/home/$username/" -xf "talys.tar"
+    rm "talys.tar"
+    cd "/home/$username/talys"
+    ./talys.setup
+fi
 
 ##################################################
 #       FINAL ACTIONS 
