@@ -207,6 +207,7 @@ sed -i 's/ssh_login *<- *"[^"]*"/ssh_login <- "'"${username}"'@localhost"/' "eva
 sed -i 's/calcdir_loc *<- *"[^"]*"/calcdir_loc <- "\/home\/'"$username"'\/calcdir"/' "eval-fe56/config.R"
 sed -i 's/calcdir_rem *<- *"[^"]*"/calcdir_rem <- "\/home\/'"$username"'\/remcalcdir"/' "eval-fe56/config.R"
 sed -i 's/rootpath *<- *"[^"]*"/rootpath <- "\/home\/'"$username"'\/eval-fe56"/' "eval-fe56/config.R"
+sed -i 's/\(initClusterTALYS(.*, *talysExe *= *"\)[^"]*\(",.*\)$/\1'"\\/home\\/$username\\/talys\\/source\\/talys"'\2/' "eval-fe56/config.R" 
 sed -i 's/setwd("[^"]*")/setwd("\/home\/'"$username"'\/eval-fe56")/' "eval-fe56/run_pipeline.R"
 
 # create an exemplary calculation directory
