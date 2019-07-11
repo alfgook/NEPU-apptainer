@@ -213,6 +213,7 @@ sed -i 's/setwd("[^"]*")/setwd("\/home\/'"$username"'\/eval-fe56")/' "eval-fe56/
 # create an exemplary calculation directory
 mkdir "/home/$username/calcdir"
 mkdir "/home/$username/remcalcdir"
+mkdir "/home/$username/talysResults"
 
 ##################################################
 #       INSTALL TALYS 
