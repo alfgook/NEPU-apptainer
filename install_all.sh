@@ -4,8 +4,8 @@
 #       CONFIGURATION VARIABLES
 ##################################################
 
-username="mygeorg"
-password="mymypw"
+username="username"
+password="password"
 
 instpath="/home/$username/install"
 talysurl="ftp://ftp.nrg.eu/pub/www/talys/talys.tar"
