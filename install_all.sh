@@ -8,7 +8,7 @@ username="username"
 password="password"
 
 instpath="/home/$username/install"
-talysurl="ftp://ftp.nrg.eu/pub/www/talys/talys.tar"
+talysurl="https://tendl.web.psi.ch/tendl_2019/talys/talys.tar"
 
 # installation files to keep
 keep_Rcodes="yes"
