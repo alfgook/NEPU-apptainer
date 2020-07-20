@@ -238,9 +238,11 @@ mkdir "/home/$username/talysResults"
 if [ ! -z "$talysurl" ]; then
     cd "$instpath"
     wget "$talysurl"
-    tar -C "/home/$username/" -xf "talys.tar"
-    rm "talys.tar"
+    talys_tarfile=$(basename $talysurl)
+    tar -C "/home/$username/" -xf $talys_tarfile
+    rm "$talys_tarfile"
     cd "/home/$username/talys"
+    sed -i "s/compiler='gfortran'/compiler='gfortran -O3'/" talys.setup
     ./talys.setup
 fi
 
