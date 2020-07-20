@@ -215,6 +215,7 @@ instpkg_cust_commit eval-fe56 c3dc58a303afcba7a47637190331f42321065f9b
 # function to update the paths in the config file
 update_config() {
   sed -i 's/ssh_login *<- *"[^"]*"/ssh_login <- "'"${username}"'@localhost"/' "$1"
+  sed -i 's/ssh_pw *<- *"[^"]*"/ssh_pw <- "'"${password}"'"/' "$1"
   sed -i 's/calcdir_loc *<- *"[^"]*"/calcdir_loc <- "\/home\/'"$username"'\/calcdir"/' "$1"
   sed -i 's/calcdir_rem *<- *"[^"]*"/calcdir_rem <- "\/home\/'"$username"'\/remcalcdir"/' "$1"
   sed -i 's/rootpath *<- *"[^"]*"/rootpath <- "\/home\/'"$username"'\/eval-fe56"/' "$1"
