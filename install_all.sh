@@ -8,7 +8,7 @@ username="username"
 password="password"
 
 instpath="/home/$username/install"
-talysurl="https://tendl.web.psi.ch/tendl_2019/talys/talys.tar"
+talysurl="http://www.nucleardata.com/storage/repos/talys/talys1.95.tar"
 
 # installation files to keep
 keep_Rcodes="yes"
