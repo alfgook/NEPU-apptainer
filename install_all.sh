@@ -96,6 +96,14 @@ instpkg_cust() {
     R CMD INSTALL "$1"
 }
 
+instpkg_cust_commit() {
+    git clone "$gitrepo/${1}.git"
+    cd "${1}"
+    git checkout "$2"
+    git switch -c local_branch
+    cd ..
+}
+
 cd "$instpath_R"
 
 # install packages available on cran
@@ -202,7 +210,7 @@ chmod 600 "/home/$username/.ssh/authorized_keys"
 
 # download pipeline
 cd "/home/$username"
-git clone https://github.com/gschnabel/eval-fe56.git
+instpkg_cust_commit eval-fe56 c3dc58a303afcba7a47637190331f42321065f9b
 
 # function to update the paths in the config file
 update_config() {
