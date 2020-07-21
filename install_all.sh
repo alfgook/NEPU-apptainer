@@ -4,14 +4,30 @@
 #       CONFIGURATION VARIABLES
 ##################################################
 
+# user account inside the container
 username="username"
 password="password"
 
+# user ID and group ID of the associated
+# user account outside the container
+extUID=1000
+extGID=1000
+
+# path to use for downloaded files
 instpath="/home/$username/install"
+
+# url to the talys archive
+# if talysurl="", talys will not be downloaded
 talysurl="http://www.nucleardata.com/storage/repos/talys/talys1.95.tar"
 
 # installation files to keep
+
+# keep the source code of custom R packages
+# after download and installation
 keep_Rcodes="yes"
+
+# keep the EXFOR master files after
+# they have been fed into the MongoDB database
 keep_exfor="no"
 
 ##################################################
@@ -272,6 +288,10 @@ fi
 chown -R "$username:$username" "/home/$username"
 # make the user owner of the installation files
 chown -R "$username:$username" "$instpath"
+
+# map the user in the container to some external user
+username=username
+sed -i "s/^$username:x:[0-9]\+:[0-9]\+/username:x:$extUID:$extGID/" /etc/passwd
 
 # set bash as default shell for the user
 chsh --shell /bin/bash "$username"
