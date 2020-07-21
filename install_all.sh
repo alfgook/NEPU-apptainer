@@ -296,8 +296,7 @@ echo Setting ownership of installation files...
 chown -R "$username:$username" "$instpath"
 
 # map the user in the container to some external user
-username=username
-sed -i "s/^$username:x:[0-9]\+:[0-9]\+/username:x:$extUID:$extGID/" /etc/passwd
+sed -i "s/^$username:x:[0-9]\+:[0-9]\+/$username:x:$extUID:$extGID/" /etc/passwd
 
 # set bash as default shell for the user
 chsh --shell /bin/bash "$username"
