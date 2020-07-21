@@ -263,6 +263,7 @@ if [ ! -z "$talysurl" ]; then
     rm "$talys_tarfile"
     cd "/home/$username/talys"
     sed -i "s/compiler='gfortran'/compiler='gfortran -O3'/" talys.setup
+    echo Compiling talys executable...
     ./talys.setup
 fi
 
@@ -288,8 +289,10 @@ fi
 
 
 # make the user owner of their home directory
+echo Setting ownership of files in user home directory...
 chown -R "$username:$username" "/home/$username"
 # make the user owner of the installation files
+echo Setting ownership of installation files...
 chown -R "$username:$username" "$instpath"
 
 # map the user in the container to some external user
