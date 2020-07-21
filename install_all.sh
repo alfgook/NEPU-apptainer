@@ -224,6 +224,9 @@ cat "/home/$username/.ssh/id_rsa.pub" >> "/home/$username/.ssh/authorized_keys"
 chmod 600 "/home/$username/.ssh/id_rsa.pub"
 chmod 600 "/home/$username/.ssh/authorized_keys"
 
+# set correct username in startup.sh
+sed -i "s/username/$username/g" /home/startup.sh
+
 # download pipeline
 cd "/home/$username"
 instpkg_cust_commit eval-fe56 c3dc58a303afcba7a47637190331f42321065f9b
