@@ -1,53 +1,6 @@
-#!/bin/sh
-
-##################################################
-#       CONFIGURATION VARIABLES
-##################################################
-
-# user account inside the container
-username="username"
-password="password"
-
-# user ID and group ID of the associated
-# user account outside the container
-extUID=1000
-extGID=1000
-
-# path to use for downloaded files
-instpath="/home/$username/install"
-
-# url to the talys archive
-# if talysurl="", talys will not be downloaded
-talysurl="http://www.nucleardata.com/storage/repos/talys/talys1.95.tar"
-
-# installation files to keep
-
-# keep the source code of custom R packages
-# after download and installation
-keep_Rcodes="yes"
-
-# keep the EXFOR master files after
-# they have been fed into the MongoDB database
-keep_exfor="no"
-
-##################################################
-#       SPECIFIC INSTALLATION PATHS 
-##################################################
-
-instpath_R="$instpath/Rpackages"
-instpath_R2="$instpath/Rcode"
-instpath_DL="$instpath/downloads"
-instpath_exfor="$instpath/exfor"
-instpath_exfor_text="$instpath_exfor/text"
-
-repourl_R="https://cran.rstudio.com"
-gitrepo="https://github.com/gschnabel"
-
 ##################################################
 #       CONFIGURE OPTIONS
 ##################################################
-
-savewd=$(pwd)
 
 export DEBIAN_FRONTEND=noninteractive
 mkdir "$HOME/.ssh"
@@ -62,7 +15,6 @@ mkdir -p "$instpath"
 mkdir "$instpath_DL"
 mkdir "$instpath_R"
 mkdir "$instpath_R2"
-mkdir "$instpath_downloads"
 
 ##################################################
 #       INSTALL BASIC OS PACKAGES
@@ -103,23 +55,6 @@ apt install -yq r-base
 #       INSTALL REQUIRED R PACKAGES
 ##################################################
 
-instpkg_cran() {
-    R --no-save -e "install.packages(\"$1\", repos=\"$repourl_R\")"
-}
-
-instpkg_cust() {
-    git clone "$gitrepo/${1}.git"
-    R CMD INSTALL "$1"
-}
-
-instpkg_cust_commit() {
-    git clone "$gitrepo/${1}.git"
-    cd "${1}"
-    git checkout "$2"
-    git switch -c local_branch
-    cd ..
-}
-
 cd "$instpath_R"
 
 # install packages available on cran
@@ -131,28 +66,30 @@ instpkg_cran digest
 instpkg_cran ggplot2
 instpkg_cran mvtnorm
 
-# install custom packages not on cran
-
-instpkg_cust interactiveSSH
-instpkg_cust rsyncFacility
-instpkg_cust remoteFunctionSSH
-instpkg_cust clusterSSH
-
+# install package required for MongoDB EXFOR creation
 instpkg_cust exforParser
-instpkg_cust MongoEXFOR
-instpkg_cust jsonExforUtils
-instpkg_cust talysExforMapping
-instpkg_cust TALYSeval
-instpkg_cust exforUncertainty
-instpkg_cust nucdataBaynet
-
-instpkg_cust clusterTALYS
 
 # install Rstudio
 
 cd "$instpath_DL"
 wget "https://download2.rstudio.org/rstudio-server-1.1.463-amd64.deb"
 gdebi --n "rstudio-server-1.1.463-amd64.deb"
+
+##################################################
+#       INSTALL TALYS 
+##################################################
+
+if [ ! -z "$talysurl" ]; then
+    cd "$instpath"
+    wget "$talysurl"
+    talys_tarfile=$(basename $talysurl)
+    tar -C "/home/$username/" -xf $talys_tarfile
+    rm "$talys_tarfile"
+    cd "/home/$username/talys"
+    sed -i "s/compiler='gfortran'/compiler='gfortran -O3'/" talys.setup
+    echo Compiling talys executable...
+    ./talys.setup
+fi
 
 ##################################################
 #       SET UP THE MONGODB DATABASE
@@ -224,51 +161,8 @@ cat "/home/$username/.ssh/id_rsa.pub" >> "/home/$username/.ssh/authorized_keys"
 chmod 600 "/home/$username/.ssh/id_rsa.pub"
 chmod 600 "/home/$username/.ssh/authorized_keys"
 
-# set correct username in startup.sh
-sed -i "s/username/$username/g" /home/startup.sh
-
-# download pipeline
-cd "/home/$username"
-instpkg_cust_commit eval-fe56 c3dc58a303afcba7a47637190331f42321065f9b
-
-# function to update the paths in the config file
-update_config() {
-  sed -i 's/ssh_login *<- *"[^"]*"/ssh_login <- "'"${username}"'@localhost"/' "$1"
-  sed -i 's/ssh_pw *<- *"[^"]*"/ssh_pw <- "'"${password}"'"/' "$1"
-  sed -i 's/calcdir_loc *<- *"[^"]*"/calcdir_loc <- "\/home\/'"$username"'\/calcdir"/' "$1"
-  sed -i 's/calcdir_rem *<- *"[^"]*"/calcdir_rem <- "\/home\/'"$username"'\/remcalcdir"/' "$1"
-  sed -i 's/rootpath *<- *"[^"]*"/rootpath <- "\/home\/'"$username"'\/eval-fe56"/' "$1"
-  sed -i 's/savePathTalys *<- *"[^"]*"/savePathTalys <- "\/home\/'"$username"'\/talysResults"/' "$1"
-  sed -i 's/\(initClusterTALYS(.*, *talysExe *= *"\)[^"]*\(",.*\)$/\1'"\\/home\\/$username\\/talys\\/source\\/talys"'\2/' "$1" 
-}
-# update paths in the config files
-update_config "eval-fe56/config.R"
-update_config "eval-fe56/config.R.fulleval"
-sed -i 's/setwd("[^"]*")/setwd("\/home\/'"$username"'\/eval-fe56")/' "eval-fe56/run_pipeline.R"
-
-# create an exemplary calculation directory
-mkdir "/home/$username/calcdir"
-mkdir "/home/$username/remcalcdir"
-mkdir "/home/$username/talysResults"
-
 ##################################################
-#       INSTALL TALYS 
-##################################################
-
-if [ ! -z "$talysurl" ]; then
-    cd "$instpath"
-    wget "$talysurl"
-    talys_tarfile=$(basename $talysurl)
-    tar -C "/home/$username/" -xf $talys_tarfile
-    rm "$talys_tarfile"
-    cd "/home/$username/talys"
-    sed -i "s/compiler='gfortran'/compiler='gfortran -O3'/" talys.setup
-    echo Compiling talys executable...
-    ./talys.setup
-fi
-
-##################################################
-#       FINAL ACTIONS 
+#       FINAL ACTIONS
 ##################################################
 
 # delete installation files
@@ -282,12 +176,6 @@ else
     mv "$instpath/exfortmp" "$instpath_exfor"
 fi
 
-if [ "$keep_Rcodes" != "yes" ]; then
-    rm -rf "$instpath_R"
-    rm -rf "$instpath_R2"
-fi
-
-
 # make the user owner of their home directory
 echo Setting ownership of files in user home directory...
 chown -R "$username:$username" "/home/$username"
@@ -300,5 +188,4 @@ sed -i "s/^$username:x:[0-9]\+:[0-9]\+/$username:x:$extUID:$extGID/" /etc/passwd
 
 # set bash as default shell for the user
 chsh --shell /bin/bash "$username"
-
 
