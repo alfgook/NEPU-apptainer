@@ -3,7 +3,7 @@
 ##################################################
 
 cd "/home/$username"
-instpkg_cust_commit eval-fe56 c3dc58a303afcba7a47637190331f42321065f9b
+instpkg_cust_commit eval-fe56 015398922183ff180c61d35a7242aecd1fecfd8a
 
 # function to update the paths in the config file
 update_config() {
@@ -26,3 +26,4 @@ mkdir "calcdir"
 mkdir "remcalcdir"
 mkdir "talysResults"
 chown "$username:$username" calcdir remcalcdir talysResults  
+chown -R "$username:$username" /home/$username/eval-fe56
