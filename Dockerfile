@@ -12,6 +12,11 @@ COPY install_environment.sh /home/install
 RUN chmod 744 /home/install/install_environment.sh
 RUN /bin/bash -c "source /home/install/config.sh && source /home/install/common_funs.sh && source /home/install/install_environment.sh"
 
+# intall custom R packages required by the pipeline
+COPY install_custom_packages.sh /home/install
+RUN chmod 744 /home/install/install_custom_packages.sh
+RUN /bin/bash -c "source /home/install/config.sh && source /home/install/common_funs.sh && source /home/install/install_custom_packages.sh"
+
 # install the pipeline itself as additional layer
 COPY install_pipeline.sh /home/install
 RUN chmod 744 /home/install/install_pipeline.sh
