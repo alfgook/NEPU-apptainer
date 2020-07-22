@@ -141,7 +141,7 @@ sed -i -e "s|<PATH TO DIRECTORY WITH EXFOR ENTRIES>|$instpath_exfor_text|" "$Rfi
 Rscript --no-save --vanilla "$Rfile" 
 
 ##################################################
-#       CREATE USERDIR WITH PIPELINE 
+#       CREATE USERDIR FOR PIPELINE 
 ##################################################
 
 # create user and their home directory
