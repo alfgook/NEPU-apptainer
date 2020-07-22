@@ -6,6 +6,7 @@ instpkg_cran() {
 instpkg_cust() {
     git clone "$gitrepo/${1}.git"
     chown -R "$username:$username" $1
+    chmod -R 777 $1
     R CMD INSTALL "$1"
 }
 
@@ -17,4 +18,5 @@ instpkg_cust_commit() {
     git switch -c local_branch
     cd ..
     chown -R "$username:$username" $1
+    chmod -R 777 $1
 }

@@ -8,6 +8,12 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en
 export LC_ALL=en_US.UTF-8
 
+# map the user in the container to some external user
+sed -i "s/^username:x:[0-9]\+:[0-9]\+/username:x:$extUID:$extGID/" /etc/passwd
+chown "username:username" /home/username
+cd /home/username
+chown -R "username:username" .ssh calcdir remcalcdir talysResults eval-fe56
+
 # start an interactive session inside the container
 if [ $1 = 'interactive' ]; then
     su username

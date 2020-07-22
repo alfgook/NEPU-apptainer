@@ -19,6 +19,8 @@ mkdir "$instpath_R2"
 #       INSTALL BASIC OS PACKAGES
 ##################################################
 
+export DEBIAN_FRONTEND=noninteractive
+
 apt install -yq apt-utils
 apt install -yq lib32readline7
 apt install -yq libxml2
