@@ -3,7 +3,7 @@
 ##################################################
 
 # user account inside the container
-username="usernamex"
+username="username"
 password="password"
 
 # user ID and group ID of the associated
@@ -43,3 +43,8 @@ instpath_exfor_text="$instpath_exfor/text"
 repourl_R="https://cran.rstudio.com"
 gitrepo="https://github.com/gschnabel"
 
+##################################################
+#       OTHER NECESSARY VARIABLES 
+##################################################
+
+export DEBIAN_FRONTEND=noninteractive

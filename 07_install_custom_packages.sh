@@ -18,5 +18,4 @@ instpkg_cust clusterTALYS
 
 if [ "$keep_Rcodes" != "yes" ]; then
     rm -rf "$instpath_R"
-    rm -rf "$instpath_R2"
 fi
