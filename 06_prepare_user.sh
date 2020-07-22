@@ -18,6 +18,7 @@ ssh-keygen -t rsa -N "" -f "/home/$username/.ssh/id_rsa"
 cat "/home/$username/.ssh/id_rsa.pub" >> "/home/$username/.ssh/authorized_keys" 
 chmod 600 "/home/$username/.ssh/id_rsa.pub"
 chmod 600 "/home/$username/.ssh/authorized_keys"
+chown -R "$username:$username" "/home/$username/.ssh"
 
 # set bash as default shell for the user
 chsh --shell /bin/bash "$username"

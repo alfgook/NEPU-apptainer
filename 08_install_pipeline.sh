@@ -25,5 +25,5 @@ cd "/home/$username"
 mkdir "calcdir"
 mkdir "remcalcdir"
 mkdir "talysResults"
-chown "$username:$username" calcdir remcalcdir talysResults  
-chown -R "$username:$username" /home/$username/eval-fe56
+chown -R "$username:$username" calcdir remcalcdir talysResults
+chown -R "$username:$username" eval-fe56

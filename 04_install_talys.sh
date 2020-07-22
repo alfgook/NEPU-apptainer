@@ -6,10 +6,11 @@ if [ ! -z "$talysurl" ]; then
     cd "$instpath"
     wget "$talysurl"
     talys_tarfile=$(basename $talysurl)
-    tar -C "/home/$username/" -xf $talys_tarfile
+    tar --no-same-owner -C "/home/$username/" -xf $talys_tarfile
+    chmod -R "$username:$username" "/home/$username/talys"
     rm "$talys_tarfile"
     cd "/home/$username/talys"
-    sed -i "s/compiler='gfortran'/compiler='gfortran -O3'/" talys.setup
+    sed -i "s/compiler='gfortran'/compiler='gfortran -O2'/" talys.setup
     echo Compiling talys executable...
     ./talys.setup
 fi
