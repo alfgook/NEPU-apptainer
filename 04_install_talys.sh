@@ -10,7 +10,7 @@ if [ ! -z "$talysurl" ]; then
     rm "$talys_tarfile"
     chown -R "$username:$username" "/home/$username/talys"
     chmod -R 777 "/home/$username/talys"
-    find talys -type f -print0 | xargs -0 chmod 666
+    find "/home/$username/talys" -type f -print0 | xargs -0 chmod 666
 
     cd "/home/$username/talys"
     sed -i "s/compiler='gfortran'/compiler='gfortran -O2'/" talys.setup
