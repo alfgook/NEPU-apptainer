@@ -14,7 +14,9 @@ instpkg_cust exforParser
 
 # create dirs for EXFOR master files
 mkdir "$instpath_exfor"
+chmod 777 "$instpath_exfor"
 mkdir "$instpath_exfor_text"
+chmod 777 "$instpath_exfor_text"
 cd "$instpath_exfor"
 
 download_exfor "http://www.nucleardata.com/storage/repos/exfor/entries_10001-10535.tar.xz"
@@ -47,10 +49,12 @@ mongod --fork --logpath /var/log/mongod.log
 
 # download and run MongoDB EXFOR creation script
 mkdir "$instpath_R2"
+chmod 777 "$instpath_R2"
 cd "$instpath_R2"
 
 Rfile="$instpath_R2/createExforDb/create_exfor_mongodb.R"
 git clone https://github.com/gschnabel/createExforDb.git
+chmod -R 777 "$instpath_R2"
 sed -i -e "s|<PATH TO DIRECTORY WITH EXFOR ENTRIES>|$instpath_exfor_text|" "$Rfile"
 Rscript --no-save --vanilla "$Rfile" 
 

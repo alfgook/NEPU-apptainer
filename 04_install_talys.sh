@@ -7,11 +7,16 @@ if [ ! -z "$talysurl" ]; then
     wget "$talysurl"
     talys_tarfile=$(basename $talysurl)
     tar --no-same-owner -C "/home/$username/" -xf $talys_tarfile
-    chown -R "$username:$username" "/home/$username/talys"
     rm "$talys_tarfile"
+    chown -R "$username:$username" "/home/$username/talys"
+    chmod -R 777 "/home/$username/talys"
+    find talys -type f -print0 | xargs -0 chmod 666
+
     cd "/home/$username/talys"
     sed -i "s/compiler='gfortran'/compiler='gfortran -O2'/" talys.setup
     echo Compiling talys executable...
+    chmod 777 "talys.setup"
     ./talys.setup
+    chmod 777 "source/talys"
 fi
 

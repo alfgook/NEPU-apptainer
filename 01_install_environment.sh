@@ -11,9 +11,13 @@ apt update
 ##################################################
 
 mkdir -p "$instpath"
+chmod 777 "$instpath"
 mkdir "$instpath_DL"
+chmod 777 "$instpath_DL"
 mkdir "$instpath_R"
+chmod 777 "$instpath_R"
 mkdir "$instpath_R2"
+chmod 777 "$instpath_R2"
 
 ##################################################
 #       INSTALL BASIC OS PACKAGES
