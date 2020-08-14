@@ -57,7 +57,7 @@
 }
  
  \title{\textbf{Prototype of a pipeline for reproducible nuclear data evaluation} \\[2ex] User manual}
- \date{August 15, 2019}
+ \date{August 15, 2019\\v0.0.0}
  \author{Georg Schnabel \\ \href{mailto:georg.schnabel@nucleardata.com}{georg.schnabel@nucleardata.com}}
  
  \begin{document}
@@ -65,15 +65,16 @@
  \maketitle
  \begin{abstract}
 This document provides instructions to set up a pipeline for nuclear data evaluation using the models code TALYS.
-Relying on the Docker technology for virtualization, the pipeline is easy to install under Linux, Windows, and MacOS.
+Relying on the Docker technology for virtualization, the pipeline is easy to install.
 In the default configuration, an evaluation of neutron-induced cross sections of Fe-56 is performed.
 The pipeline can be explored and modified either using a terminal and the typical Linux command line tools or a graphical user interface accessible via a web browser.
 Adjustments of the pipeline enable the automatic and reproducible evaluation of other isotopes.
 The evaluation features automatic uncertainty correction of experimental data and tuning the model parameters using the Levenberg-Marquardt algorithm.
 The mathematical details of the evaluation are outside the scope of this document whose focus is on the technical aspects to get the pipeline running.
 The proper working of the pipeline can be tested on a desktop computer.
-For a full scale evaluation, a multicore machine or cluster with SSH access is strongly recommended.
-In this mode of operation and for the time being, Linux must be installed on the multicore machine or cluster.
+For a full scale evaluation, either a multicore machine or a cluster with SSH access is strongly recommended.
+The manual explains the setup of the pipeline on Linux.
+It may be possible to set up the pipeline on a Windows machine but we have not tested that.
  \end{abstract} 
  \newpage
  \tableofcontents
@@ -132,8 +133,6 @@ If Docker is installed, you should see information about the installed Docker ve
 
  \section{Installation of the evaluation pipeline}
 We mean by \textit{installation of the pipeline} the installation of the Docker image, the creation of a Docker container based on the Docker image, and the necessary configuration \textit{within} the container, and potentially some actions that need to be performed \textit{outside} the container.
-Don't worry if this sounds complicated.
-As you will see, the setup requires only a small number of steps and it is not necessary to understand every detail from the very beginning.
 
 There are two possible setups.
 The container can be set up so that the complete pipeline including running TALYS is performed \textit{within} the container. This mode of operation is recommended for testing and to get familiar with the pipeline. We will discuss it first in~\cref{subsec:install_basic}.
@@ -155,9 +154,10 @@ It is also possible to run the Docker container itself on the multicore machine.
   username="username"
   password="password"
 \end{verbatim}
-Change the username and the password between the quotation marks to your liking.
  These credentials will be used for the creation of a user account within the Docker image.
  Furthermore, they will be required to access the pipeline via a web browser.
+ The command line instructions in the manual assume these credentials. 
+However, you can change the username and the password between the quotation marks to your liking.
  
  Depending on your internet speed, the following instruction may take up to an hour.
  Open a terminal and change into the folder \path{eval-fe56-docker-master}.
@@ -184,16 +184,14 @@ Then in the terminal run
  Now let us create a container based on the Docker image.
  In a terminal window run the command
 \begin{verbatim}
-  docker run -it -p 9090:8787 --name eval-fe56-cont eval-fe56-img:latest\end{verbatim}
- After a few seconds, you will see a command prompt starting with \verb#root@# followed by some long hexadecimal string.
+  docker run -it -p 9090:8787 --name eval-fe56-cont \
+             eval-fe56-img:latest interactive
+\end{verbatim}
+ After a few seconds, you will see a command prompt starting with \verb#username@# followed by a long hexadecimal string.
  You are in a Linux session \textit{inside} the container.
  
  To test the full pipeline, we need to run it.
  When typing the following instructions, whenever the word \verb#username# appears, you need to replace it by the username chosen for the creation of the Docker image.
- Switch from the root to the user account by running
-\begin{verbatim}
-  su username
-\end{verbatim} 
  Change to the directory containing the pipeline
 \begin{verbatim}
   cd /home/username/eval-fe56
@@ -246,14 +244,84 @@ If at a later point in time, you want to start the container again, run the comm
 The second command is only necessary if you want to work with a shell prompt \textit{inside} the container.
 It is however not needed to manage the pipeline via the graphical user interface accessible via a web browser.
 
- \subsection{Connecting the pipeline to a cluster or multicore machine}
+If you want to dispose of the container, all data produced by the run of the pipeline are then discarded,
+run the command
+\begin{verbatim}
+  docker stop eval-fe56-cont
+  docker rm eval-fe56-cont
+\end{verbatim}
+
+\subsection{Running the line on a multicore machine}
+
+The full evaluation of Fe56 requires a multicore machine or cluster.
+We first explain the use of a multicore machine because the setup is easier.
+The ballpark of the runtime on a machine with about 80 cores is about twelve hours.
+The runtime depends linearly on the number of cores.
+
+First, create the following directory structure on your file system,
+which will be filled with the data generated during the run of the pipeline:
+\begin{verbatim}
+  mkdir eval-fe56
+  cd eval-fe56
+  mkdir outdata
+  mkdir talysResults
+\end{verbatim}
+
+Let \verb#<PATH># be the absolute path of the \verb#eval-fe56# folder.
+If you are on a Linux machine, figure out your user id \verb#UID# and group id \verb#GID#,
+e.g., by using the command
+\begin{verbatim}
+  cat /etc/passwd | grep <your username>
+\end{verbatim}
+The first number of the output is the \verb#UID# and the second number the \verb#GID#. 
+There are four modes to run the pipeline:
+\begin{itemize}
+  \item \emph{interactive} - create a container and immediately log in as the default user
+  \item \emph{interactive\_root} - create a container and immediately log in as the root user
+  \item \emph{test\_eval} - create a container and perform a test evaluation (non-interactive mode)
+  \item \emph{full\_eval} - create a container and perform a full evaluation (non-interactive mode)
+\end{itemize}
+The template of the command to start the container with the pipeline is given by
+\begin{verbatim}
+docker run -it -p 9090:8787 \\
+           -v <PATH>/outdata:/home/username/eval-fe56/outdata \
+           -v <PATH>/talysResults:/home/username/talysResults \
+           -v /dev/shm:/dev/shm \
+           -e extUID=<UID> -e extGID=<GID> \
+           --name eval-fe56-cont eval-fe56-img \
+           <mode> 
+\end{verbatim}
+The backslash at the end of a line indicates that the next line still belongs
+to the current instruction.
+Under Linux, the folder \verb#/dev/shm# is mapped into main memory.
+
+You may want to use mode \emph{test\_eval} first to see whether the command
+works correctly.
+At the end of that run you should have some tar archives in the folder
+\verb#talysResults# and a bunch of folders numbered from \verb#01# to
+\verb#09#.
+After you have seen that everything works, you can delete the files and folders
+in \verb#outdata# and \verb#talysResults# and run a full evaluation by using
+the mode \emph{full\_eval}.
+As already mentioned, this mode takes about 12 hours on a machine
+with 80 cores.
+If something goes wrong, you can force the stopping of the container by
+running
+\begin{verbatim}
+  stop eval-fe56-cont
+\end{verbatim}
+
+
+ \subsection{Connecting the pipeline to a cluster}
  \label{subsec:install_multicore}
  We assume that you have successfully performed the installation of the pipeline as described in~\cref{subsec:install_basic}.
  In the default configuration of the pipeline, all computations are performed \textit{inside} the Docker container.
  For full scale evaluations, it is strongly recommended to run the pipeline in combination with a multicore machine or cluster.
  For the time being, Linux must be installed on the multicore machine or cluster.
 
- If using the pipeline with a multicore machine, enabled SSH access to the multicore machine is required.
+ In the previous section we briefly showed how the pipeline can be run inside the Docker container on a multicore machine.
+ The pipeline container can also run on a computer which connects to the multicore machine via SSH to perform the
+ required calculations there.
  This configuration is depicted in the following graph.
  \begin{center}
  \includegraphics[scale=0.6]{graphs/multicore_config.png}
