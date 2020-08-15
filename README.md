@@ -46,7 +46,7 @@ by `cat /etc/passwd | grep <your username>`.
 Now you can run the test evaluation and have the results stored outside the
 container by running:
 ```
-docker run -it -p 9090:22 \
+docker run -it -p 9090:8787 \
            -v <outdata>:/home/username/eval-fe56/outdata \
            -v <talysResults>:/home/username/talysResults \
            -v /dev/shm:/dev/shm \
