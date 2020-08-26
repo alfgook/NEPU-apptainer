@@ -62,12 +62,14 @@ docker run -it -p 9090:8787 \
 
 Talys result files packed as tar files should have been produced in `<talysResults>`
 and folders numbered from `01` to `09` in `<outdata>`.
-If everything worked and you have 80 cores and about 40 GBytes of main memory 
+If everything worked and you have 64 cores and about 40 GBytes of main memory 
 and are willing to wait 12 hours,
 you can also replace `test_eval` by `full_eval` to perform the full scale
 evaluation of Fe56.
 The parameter `maxNumCPU` can be used to restrict the number of TALYS
 calculations performed in parallel.
+Memory consumption and duration of execution scale linearly with the
+number of CPUs participating in the computation.
 
 If something goes wrong, you can kill the running calculations by
 ```
