@@ -11,7 +11,13 @@ The manual available [here](https://github.com/gschnabel/eval-fe56-docker/raw/ma
 provides installation instructions and further details
 regarding the evaluation pipeline.
 
-If you are already familiar with Docker, you may just jump into exploring the pipeline:
+If you are already familiar with Docker, you may just jump into exploring the pipeline.
+Clone this repository and then create the Docker image by launching from inside the repository folder:
+```
+docker build -t eval-fe56-img .
+```
+
+To create a container and to launch an interactive terminal session inside, execute:
 ```
 docker run --rm -it -p 9090:8787 --name eval-fe56-cont eval-fe56-img interactive
 ```
