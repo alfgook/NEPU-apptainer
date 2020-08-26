@@ -42,6 +42,7 @@ ARG gitrepo="https://github.com/gschnabel"
 # user account outside the container
 ENV extUID=1000
 ENV extGID=1000
+ENV maxNumCPU=32
 
 ##################################################
 #       IMAGE BUILDING
