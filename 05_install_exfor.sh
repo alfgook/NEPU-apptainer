@@ -10,7 +10,7 @@ download_exfor() {
 
 # install package required for MongoDB EXFOR creation
 cd "$instpath_R"
-instpkg_cust exforParser 0ebf3900c5054322faa4b595c56e11942f0d60622931042d57dcc26553934522
+instpkg_cust exforParser 4de08643fc64299e3f926ed36c81c971efe545cc469b4fd97f0487155ec15a26
 
 # create dirs for EXFOR master files
 mkdir "$instpath_exfor"
@@ -53,7 +53,7 @@ chmod 777 "$instpath_R2"
 cd "$instpath_R2"
 
 Rfile="$instpath_R2/createExforDb/create_exfor_mongodb.R"
-download_git_cust createExforDb 82202c5a6a2e15380b28ea69db69a739d3adae70c10a02bbb95f72f4d734ca5a
+download_git_cust createExforDb 10c618b46ef402be1fc82a0e6583ea09fccae23003c23f99b1448fedc027c29f
 chmod -R 777 "$instpath_R2"
 sed -i -e "s|<PATH TO DIRECTORY WITH EXFOR ENTRIES>|$instpath_exfor_text|" "$Rfile"
 Rscript --no-save --vanilla "$Rfile" 
