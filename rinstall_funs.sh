@@ -16,6 +16,7 @@ instpkg_cust() {
         mypath="`pwd`/$mydir"
         cd "$curdir"
         cp -r "$mypath" "$1" 
+        chmod -R 777 "$1"
     else
         echo "ERROR: could not install package $1"
     fi 
@@ -36,6 +37,7 @@ download_git_cust() {
         mypath="`pwd`/$mydir"
         cd "$curdir"
         mv "$mypath" "$1"  
+        chmod -R 777 "$1"
     else
         echo "ERROR: could not download git repo $1"
     fi 
