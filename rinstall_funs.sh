@@ -4,18 +4,41 @@ instpkg_cran() {
 
 
 instpkg_cust() {
-    git clone "$gitrepo/${1}.git"
-    chmod -R 777 $1
-    R CMD INSTALL "$1"
+    curdir=`pwd`
+    mytemp=`mktemp -d`
+    cd "$mytemp"
+    wget -O temp.zip "http://nugget.link/$2/zip"
+    unzip temp.zip
+    rm temp.zip
+    mydir=`ls -1`
+    if [[ "$mydir" == "$1"* ]]; then
+        R CMD INSTALL "$mydir"
+        mypath="`pwd`/$mydir"
+        cd "$curdir"
+        cp -r "$mypath" "$1" 
+    else
+        echo "ERROR: could not install package $1"
+    fi 
+    rm -r "$mytemp"
+    cd "$curdir"
 }
 
 
-instpkg_cust_commit() {
-    git clone "$gitrepo/${1}.git"
-    cd "${1}"
-    git checkout "$2"
-    git branch local_branch
-    git checkout local_branch
-    cd ..
-    chmod -R 777 $1
+download_git_cust() {
+    curdir=`pwd`
+    mytemp=`mktemp -d`
+    cd "$mytemp"
+    wget -O temp.zip "http://nugget.link/$2/zip"
+    unzip temp.zip
+    rm temp.zip
+    mydir=`ls -1`
+    if [[ "$mydir" == "$1"* ]]; then
+        mypath="`pwd`/$mydir"
+        cd "$curdir"
+        mv "$mypath" "$1"  
+    else
+        echo "ERROR: could not download git repo $1"
+    fi 
+    rm -r "$mytemp"
+    cd "$curdir"
 }

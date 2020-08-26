@@ -3,7 +3,7 @@
 ##################################################
 
 cd "/home/$username"
-instpkg_cust_commit eval-fe56 9d25db705da02a69b5ed2f0709edec6f1a6ca94a
+download_git_cust eval-fe56 cb36a65c888feb7577579595a0d533919216f2977e87ab8c6be33977d11c8364
 
 # function to update the paths in the config file
 update_config() {
