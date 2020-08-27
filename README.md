@@ -16,6 +16,11 @@ Clone this repository and then create the Docker image by launching from inside 
 ```
 docker build -t eval-fe56-img .
 ```
+During the image building process, several components, such as the nuclear model code TALYS,
+and (a not up-to-date version of) the EXFOR library, are downloaded.
+The final size of the image is about 9 GBytes and depending on your internet speed
+you can anticipate the building process to take 30-60 minutes.
+
 
 To create a container and to launch an interactive terminal session inside, execute:
 ```
