@@ -3,7 +3,7 @@
 ##################################################
 
 cd "/home/$username"
-download_git_cust eval-fe56 6aebb443684960f1e06a1aaff16762ecd1de894076ac13fbaf3d653b41c37bf6
+download_git_cust eval-fe56 2a7b40345c70c2983008cebc5cbb88c30a75f436b57976cddb6fcf12c1776a02
 
 # function to update the paths in the config file
 update_config() {
