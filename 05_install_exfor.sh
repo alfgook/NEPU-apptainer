@@ -10,7 +10,7 @@ download_exfor() {
 
 # install package required for MongoDB EXFOR creation
 cd "$instpath_R"
-instpkg_cust exforParser 7003afb75e781e5877e71ae413791f6d96f29ae1b162b5f1baa98b1dcb992cb3
+instpkg_cust exforParser 09104fd60025c4d655d7fad1306a2afc2f049c6293136ed4e4a48652f80eba63
 
 # create dirs for EXFOR master files
 mkdir "$instpath_exfor"
