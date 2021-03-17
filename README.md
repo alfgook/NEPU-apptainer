@@ -34,7 +34,7 @@ and use `username` and `password` as username and password.
 
 To run a small test evaluation, you can run
 ```
-docker run --rm -it -p 9090:8787 --name eval-fe56-cont eval-fe56-img test_eval
+docker run -it -p 9090:8787 --name eval-fe56-cont eval-fe56-img test_eval
 ```
 This will take ten minutes and results will be stored inside the container.
 To see which files have been produced, type
