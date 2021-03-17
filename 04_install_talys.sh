@@ -12,10 +12,14 @@ if [ ! -z "$talysurl" ]; then
     find "/home/$username/talys" -type f -print0 | xargs -0 chmod 666
 
     cd "/home/$username/talys"
-    sed -i "s/compiler='gfortran'/compiler='gfortran -O2'/" talys.setup
-    echo Compiling talys executable...
+    echo Changing permissions, please be patient...
     chmod 777 "talys.setup"
+
+    echo Compiling talys executable...
+    sed -i "s/compiler='gfortran'/compiler='gfortran -O2'/" talys.setup
     ./talys.setup
+    echo The error about being unable to move talys to /root/bin is okay
+    echo Changing permissions, please be patient...
     chmod 777 "source/talys"
 fi
 
