@@ -14,6 +14,20 @@ chown "username:username" /home/username
 cd /home/username
 chown -R "username:username" .ssh calcdir remcalcdir talysResults eval-fe56
 
+# run a command that keeps the container
+# alive when it is restarted.
+# this is to make sure that a container
+# can be inspected more easily when
+# restarted after termination.
+state_file="/root/cont_executed"
+if [ -f "$state_file" ]; then
+    cnt=$(cat $state_file)
+    cnt=$(($cnt+1))
+    echo $cnt > "$state_file"
+    while true; do sleep 1; done    
+fi
+echo 1 > "$state_file"
+
 # start an interactive session inside the container
 if [ $1 = 'interactive' ]; then
     su username
