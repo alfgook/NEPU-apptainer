@@ -57,18 +57,17 @@
 }
  
  \title{\textbf{Prototype of a pipeline for reproducible nuclear data evaluation} \\[2ex] User manual}
- \date{August 15, 2019\\v0.0.0}
+ \date{March 24, 2021\\v0.1.0}
  \author{Georg Schnabel \\ \href{mailto:georg.schnabel@nucleardata.com}{georg.schnabel@nucleardata.com}}
  
  \begin{document}
 
  \maketitle
  \begin{abstract}
-This document provides instructions to set up a pipeline for nuclear data evaluation using the models code TALYS.
+This document provides instructions to set up a pipeline for nuclear data evaluation using the nuclear models code TALYS.
 Relying on the Docker technology for virtualization, the pipeline is easy to install.
-In the default configuration, an evaluation of neutron-induced cross sections of Fe-56 is performed.
+The pipeline performs a fully automated and reproducible evaluation of neutron-induced cross sections of Fe-56.
 The pipeline can be explored and modified either using a terminal and the typical Linux command line tools or a graphical user interface accessible via a web browser.
-Adjustments of the pipeline enable the automatic and reproducible evaluation of other isotopes.
 The evaluation features automatic uncertainty correction of experimental data and tuning the model parameters using the Levenberg-Marquardt algorithm.
 The mathematical details of the evaluation are outside the scope of this document whose focus is on the technical aspects to get the pipeline running.
 The proper working of the pipeline can be tested on a desktop computer.
@@ -97,12 +96,8 @@ It may be possible to set up the pipeline on a Windows machine but we have not t
  In principle, it can be modified to produce evaluations of other isotopes, to use a different set of experimental data, or optimize other model parameters than in the default configuration.
  This document will provide explanations and pointers to effect such modifications.
  However, in view of the complexity and the tremendous number of different choices possible in an evaluation, covering all potential use cases is clearly out of reach in this document.
- As the pipeline is written in R, a working knowledge of the programming language R and the willingness to develop some familiarty with the pipeline is required to effect modifications not discussed in this document.
+ As the pipeline is written in R, a working knowledge of the programming language R and the willingness to develop some familiarity with the pipeline is required to effect modifications not discussed in this document.
  
- The pipeline in the current state is not automated enough to completely liberate a human expert from any involvement.
- It is not enough to specify the isotope and push the button but other preparatory steps are needed.
- Having said this, the full automation (if desired) without human intervention is in reach and this pipeline may serve as a good starting point to get there.
-  
  \section{Brief description of how the evaluation pipeline works}
  The pipeline is a collection of scripts to perform a model-based evaluation of an isotope using the TALYS code.
  The scripts in the pipeline are written in the programming language R.
@@ -115,7 +110,7 @@ It may be possible to set up the pipeline on a Windows machine but we have not t
  These \textit{tar} files can be provided as input to TASMAN and TEFAL written by Arjan Koning to produce an ENDF file.
  
 \section{Bundling the pipeline - the Docker image} 
-The scripts in the pipeline rely on many different components, such as a MongoDb database, the R programming language, and serveral custom R packages, some of which require functionality only available under Linux.
+The scripts in the pipeline rely on many different components, such as a MongoDb database, the R programming language, and several custom R packages, some of which require functionality only available under Linux.
 The installation and setup of all the individual components is quite tedious.
 Therefore a Dockerfile was created that performs all the required installation steps automatically and produces a Docker image. This Docker image serves as the blue-print to instantiate Docker containers. A Docker container can be regarded as a light-weight virtual machine that runs Linux on top of the base operating system which can be either Linux, Windows, or MacOS.
 In addition to facilitating the setup, the Docker mechanism completely separates and decouples the pipeline from the underlying operating  system.
@@ -123,7 +118,7 @@ In other words, we do not mess around in any way with the configuration of your 
 
 The official Docker website is located at \url{https://www.docker.com}.
 Please consult the information on this website for more information about Docker.
-In particular, the installation of Docker Community Edition (CE), which is free of charge, is detailed at \url{https://docs.docker.com/install/}.
+In particular, the installation of Docker Community Edition (CE), which is free of charge, is detailed at \url{https://docs.docker.com/get-docker/}.
 The Docker application is an essential requirement to perform the installation of the evaluation pipeline as described in this document.
 Whether Docker is installed on your system can be checked by running in a terminal
 \begin{verbatim}
@@ -251,7 +246,7 @@ run the command
   docker rm eval-fe56-cont
 \end{verbatim}
 
-\subsection{Running the line on a multicore machine}
+\subsection{Running the pipeline on a multicore machine}
 
 The full evaluation of Fe56 requires a multicore machine or cluster.
 We first explain the use of a multicore machine because the setup is easier.
@@ -283,11 +278,11 @@ There are four modes to run the pipeline:
 \end{itemize}
 The template of the command to start the container with the pipeline is given by
 \begin{verbatim}
-docker run -it -p 9090:8787 \\
+docker run -it -p 9090:8787 \
            -v <PATH>/outdata:/home/username/eval-fe56/outdata \
            -v <PATH>/talysResults:/home/username/talysResults \
            -v /dev/shm:/dev/shm \
-           -e extUID=<UID> -e extGID=<GID> \
+           -e extUID=<UID> -e extGID=<GID> -e maxNumCPU=32 \
            --name eval-fe56-cont eval-fe56-img \
            <mode> 
 \end{verbatim}
@@ -303,8 +298,10 @@ At the end of that run you should have some tar archives in the folder
 After you have seen that everything works, you can delete the files and folders
 in \verb#outdata# and \verb#talysResults# and run a full evaluation by using
 the mode \emph{full\_eval}.
-As already mentioned, this mode takes about 12 hours on a machine
-with 80 cores.
+Using 32 cores (\verb#maxNumCPU=32#) leads to a storage need of about 3 GB in
+\verb#/dev/shm# and 23 GB of main memory. For reference, using 32 cores the
+pipeline finished in about 16 hours on a multicore machine.
+
 If something goes wrong, you can force the stopping of the container by
 running
 \begin{verbatim}
@@ -520,7 +517,7 @@ Even though many more options can be tweaked in the \verb|config.R| file, at thi
 To check that everything works as expected, click on the \verb|Source| button located near the top-right corner of the editor pane which shows the file content.
 This will save the modifications permanently to \verb|config.R| and execute the configuration.
 
-If everything goes right, no error message will appear.
+If everything goes well, no error message will appear.
 If an error message appears, double check the modifications you have made.
 Maybe you have deleted by coincidence a required quotation mark around a string.
 By clicking on \verb|Edit| in the menu at the top, and then \verb|Back| you can undo your changes until you locate the problematic line.
