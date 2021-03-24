@@ -67,24 +67,32 @@ docker run -it -p 9090:8787 \
 
 Talys result files packed as tar files should have been produced in `<talysResults>`
 and folders numbered from `01` to `09` in `<outdata>`.
-If everything worked and you have 64 cores and about 40 GBytes of main memory 
-and are willing to wait 12 hours,
-you can also replace `test_eval` by `full_eval` to perform the full scale
-evaluation of Fe56.
-The parameter `maxNumCPU` can be used to restrict the number of TALYS
-calculations performed in parallel.
-Memory consumption and duration of execution scale linearly with the
-number of CPUs participating in the computation.
 
-If something goes wrong, you can kill the running calculations by
+The full evaluation which can be performed by replacing `test_eval` by `full_eval`
+takes significant more time and resources.  Please ensure that `<outdata>` and
+`<talysResults>` are empty directories and do not contain the results of
+a previous pipeline run. Furthermore, it is important to adjust the variable
+`maxNumCPU` according to your hardware by considering the following:
+
+- `/dev/shm` is used as temporary storage of TALYS result files. One TALYS
+  calculation stores up to 150 MB worth of files. The value of `maxNumCPU`
+  determines the number of calculations run in parallel. Set `maxNumCPU` so
+  that the storage need does not exceed the capacity of `/dev/shm`.
+- Each TALYS calculation requires about 0.8 GB of main memory, which should
+  be equally taken into account to avoid running out of main memory.
+
+To give some reference, the pipeline with `maxNumCPU=32` uses up to 3 GB
+of `/dev/shm` and up to 23 GB of main memory. On our cluster, the pipeline
+run through in about 16 hours.
+
+If during pipeline execution something goes wrong, you can kill the
+running calculations by
 ```
 docker stop eval-fe56-cont
 ```
-And also permanently remove the container by typing
+and permanently remove the container by typing
 ```
 docker rm eval-fe56-cont
 ```
 Note, however, that result files will be preserved in folders
 `<outdata>` and `<talysResults>` on your filesystem.
-
-
