@@ -69,7 +69,7 @@ download_git_cust_alt() {
     curdir=`pwd`
     mytemp=`mktemp -d`
     cd "$mytemp"
-    wget -O temp.zip "https://github.com/joachim-hansson/eval-fe56/archive/refs/heads/$2.zip"
+    wget -O temp.zip "https://github.com/joachim-hansson/$1/archive/refs/heads/$2.zip"
     unzip temp.zip
     rm temp.zip
     mydir=`ls -1`

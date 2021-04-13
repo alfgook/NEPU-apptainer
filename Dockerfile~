@@ -5,7 +5,7 @@ FROM ubuntu:18.04
 ##################################################
 
 # user account inside the container
-ARG username="joape785"
+ARG username="username"
 ARG password="password"
 
 # path to use for downloaded files
