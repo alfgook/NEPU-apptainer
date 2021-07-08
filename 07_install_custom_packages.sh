@@ -14,7 +14,7 @@ instpkg_cust TALYSeval 963bc700027d16f33c06bb9194bf95b1e1512b6eeddfc05190d1a3ce3
 instpkg_cust exforUncertainty c917f70ac4520a0aef2cca8479e8e28644c8ab3c1062d439a7af9fad2d25a38a
 instpkg_cust_alt nucdataBaynet reduced_gp
 
-instpkg_cust clusterTALYS c8fe3f0abbde33b60017034f980ad0b843afcb200ed86e04c9d51aa9cd4df1ea
+instpkg_cust_alt clusterTALYS master
 
 if [ "$keep_Rcodes" != "yes" ]; then
     rm -rf "$instpath_R"
