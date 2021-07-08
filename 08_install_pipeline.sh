@@ -3,7 +3,7 @@
 ##################################################
 
 cd "/home/$username"
-download_git_cust_alt eval-fe56 dev
+download_git_cust_alt eval-fe56 devh
 
 # function to update the paths in the config file
 update_config() {
