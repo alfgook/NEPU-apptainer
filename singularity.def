@@ -1,0 +1,124 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%files
+    # copy configuration
+	#config.sh /home/install
+	#chmod 744 /home/install/config.sh
+
+	# copy common functions used in the various steps
+	rinstall_funs.sh /home
+	01_install_environment.sh /home
+	02_install_mongodb.sh /home
+	03_install_R.sh /home
+	04_install_talys.sh /home
+	05_install_exfor.sh /home
+	06_prepare_user.sh /home
+	07_install_custom_packages.sh /home
+	08_install_pipeline.sh /home
+	09_final_actions.sh /home
+	startup.sh /home
+
+%environment
+    #export OMPI_DIR=/opt/ompi
+    #export SINGULARITY_OMPI_DIR=$OMPI_DIR
+    #export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+    #export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+
+
+%post
+    ##################################################
+	#       CONFIGURATION VARIABLES
+	##################################################
+
+	# user account inside the container
+	export username="username"
+	export password="password"
+
+	# path to use for downloaded files
+	export instpath="/home/$username/install"
+
+	# url to the talys archive
+	# if talysurl="", talys will not be downloaded
+	export talysurl="http://www.nucleardata.com/storage/repos/talys/talys1.95.tar"
+
+	# installation files to keep
+
+	# keep the source code of custom R packages
+	# after download and installation
+	export keep_Rcodes="yes"
+
+	# keep the EXFOR master files after
+	# they have been fed into the MongoDB database
+	export keep_exfor="no"
+
+	##################################################
+	#       SPECIFIC INSTALLATION PATHS 
+	##################################################
+
+	export instpath="/home/$username/install"
+	export instpath_R="$instpath/Rpackages"
+	export instpath_R2="$instpath/Rcode"
+	export instpath_DL="$instpath/downloads"
+	export instpath_exfor="$instpath/exfor"
+	export instpath_exfor_text="$instpath_exfor/text"
+
+	export repourl_R="https://cran.rstudio.com"
+	export gitrepo="https://github.com/gschnabel"
+
+	# user ID and group ID of the associated
+	# user account outside the container
+	export extUID=1000
+	export extGID=1000
+	export maxNumCPU=32
+
+	##################################################
+	#       IMAGE BUILDING
+	##################################################
+
+	mkdir -p /home/install
+	cd /home/install
+	mv ../rinstall_funs.sh .
+	mv ../01_install_environment.sh .
+	mv ../02_install_mongodb.sh .
+	mv ../03_install_R.sh .
+	mv ../04_install_talys.sh .
+	mv ../05_install_exfor.sh .
+	mv ../06_prepare_user.sh .
+	mv ../07_install_custom_packages.sh .
+	mv ../08_install_pipeline.sh .
+	mv ../09_final_actions.sh .
+
+	chmod 744 /home/install/rinstall_funs.sh
+
+	chmod 744 /home/install/01_install_environment.sh
+	/bin/bash -c "source /home/install/01_install_environment.sh"
+
+	chmod 744 /home/install/02_install_mongodb.sh
+	/bin/bash -c "source /home/install/02_install_mongodb.sh"
+	
+	chmod 744 /home/install/03_install_R.sh
+	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/03_install_R.sh"
+	
+	#chmod 744 /home/install/04_install_talys.sh
+	#/bin/bash -c "source /home/install/04_install_talys.sh"
+	
+	chmod 744 /home/install/05_install_exfor.sh
+	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/05_install_exfor.sh"
+	
+	chmod 744 /home/install/06_prepare_user.sh
+	/bin/bash -c "source /home/install/06_prepare_user.sh"
+
+	chmod 744 /home/install/07_install_custom_packages.sh
+	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/07_install_custom_packages.sh"
+	
+	chmod 744 /home/install/08_install_pipeline.sh
+	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/08_install_pipeline.sh"
+	
+	#chmod 744 /home/install/09_final_actions.sh
+	#/bin/bash -c "source /home/install/09_final_actions.sh"
+
+	# startup options for container
+	#/bin/bash -c "sed -i \"s/username/$username/g\" /home/startup.sh"
+	#chmod -R 744 /home/startup.sh
+

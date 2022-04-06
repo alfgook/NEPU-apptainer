@@ -5,8 +5,8 @@
 export DEBIAN_FRONTEND=noninteractive
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 echo "deb [ arch=amd64 ] https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r-project-3.5.list
-apt update
-apt install -yq r-base=3.6.3-1bionic
+apt-get update
+apt-get install -yq r-base=3.6.3-1bionic
 
 cd "$instpath_R"
 

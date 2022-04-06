@@ -17,6 +17,7 @@ if [ ! -z "$talysurl" ]; then
 
     echo Compiling talys executable...
     sed -i "s/compiler='gfortran'/compiler='gfortran -O2'/" talys.setup
+    sed "s/\${HOME}/\/usr\/local/g" talys.setup
     ./talys.setup
     echo The error about being unable to move talys to /root/bin is okay
     chmod 777 "source/talys"
