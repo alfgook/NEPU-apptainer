@@ -7,16 +7,16 @@ From: ubuntu:18.04
 	#chmod 744 /home/install/config.sh
 
 	# copy common functions used in the various steps
-	rinstall_funs.sh /home
-	01_install_environment.sh /home
-	02_install_mongodb.sh /home
-	03_install_R.sh /home
-	04_install_talys.sh /home
-	05_install_exfor.sh /home
-	06_prepare_user.sh /home
-	07_install_custom_packages.sh /home
-	08_install_pipeline.sh /home
-	09_final_actions.sh /home
+	install-scripts-singularity/rinstall_funs.sh /home
+	install-scripts-singularity/01_install_environment.sh /home
+	install-scripts-singularity/02_install_mongodb.sh /home
+	install-scripts-singularity/03_install_R.sh /home
+	install-scripts-singularity/04_install_talys.sh /home
+	install-scripts-singularity/05_install_exfor.sh /home
+	install-scripts-singularity/06_prepare_user.sh /home
+	install-scripts-singularity/07_install_custom_packages.sh /home
+	install-scripts-singularity/08_install_pipeline.sh /home
+	install-scripts-singularity/09_final_actions.sh /home
 	startup.sh /home
 
 %environment
@@ -36,7 +36,7 @@ From: ubuntu:18.04
 	export password="password"
 
 	# path to use for downloaded files
-	export instpath="/home/$username/install"
+	export instpath="/opt/pipeline/install"
 
 	# url to the talys archive
 	# if talysurl="", talys will not be downloaded
@@ -56,7 +56,7 @@ From: ubuntu:18.04
 	#       SPECIFIC INSTALLATION PATHS 
 	##################################################
 
-	export instpath="/home/$username/install"
+	export instpath="/opt/pipeline/install"
 	export instpath_R="$instpath/Rpackages"
 	export instpath_R2="$instpath/Rcode"
 	export instpath_DL="$instpath/downloads"
@@ -76,50 +76,49 @@ From: ubuntu:18.04
 	#       IMAGE BUILDING
 	##################################################
 
-	mkdir -p /home/install
-	cd /home/install
-	mv ../rinstall_funs.sh .
-	mv ../01_install_environment.sh .
-	mv ../02_install_mongodb.sh .
-	mv ../03_install_R.sh .
-	mv ../04_install_talys.sh .
-	mv ../05_install_exfor.sh .
-	mv ../06_prepare_user.sh .
-	mv ../07_install_custom_packages.sh .
-	mv ../08_install_pipeline.sh .
-	mv ../09_final_actions.sh .
+	mkdir -p $instpath
+	cd $instpath
+	mv /home/rinstall_funs.sh .
+	mv /home/01_install_environment.sh .
+	mv /home/02_install_mongodb.sh .
+	mv /home/03_install_R.sh .
+	mv /home/04_install_talys.sh .
+	mv /home/05_install_exfor.sh .
+	mv /home/06_prepare_user.sh .
+	mv /home/07_install_custom_packages.sh .
+	mv /home/08_install_pipeline.sh .
+	mv /home/09_final_actions.sh .
 
-	chmod 744 /home/install/rinstall_funs.sh
+	chmod 744 $instpath/rinstall_funs.sh
 
-	chmod 744 /home/install/01_install_environment.sh
-	/bin/bash -c "source /home/install/01_install_environment.sh"
+	chmod 744 $instpath/01_install_environment.sh
+	/bin/bash -c "source $instpath/01_install_environment.sh"
 
-	chmod 744 /home/install/02_install_mongodb.sh
-	/bin/bash -c "source /home/install/02_install_mongodb.sh"
+	chmod 744 $instpath/02_install_mongodb.sh
+	/bin/bash -c "source $instpath/02_install_mongodb.sh"
 	
-	chmod 744 /home/install/03_install_R.sh
-	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/03_install_R.sh"
+	chmod 744 $instpath/03_install_R.sh
+	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/03_install_R.sh"
 	
-	chmod 744 /home/install/04_install_talys.sh
-	/bin/bash -c "source /home/install/04_install_talys.sh"
+	chmod 744 $instpath/04_install_talys.sh
+	/bin/bash -c "source $instpath/04_install_talys.sh"
 	
-	chmod 744 /home/install/05_install_exfor.sh
-	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/05_install_exfor.sh"
+	chmod 744 $instpath/05_install_exfor.sh
+	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/05_install_exfor.sh"
 	
-	chmod 744 /home/install/06_prepare_user.sh
-	/bin/bash -c "source /home/install/06_prepare_user.sh"
+	chmod 744 $instpath/06_prepare_user.sh
+	/bin/bash -c "source $instpath/06_prepare_user.sh"
 
-	chmod 744 /home/install/07_install_custom_packages.sh
-	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/07_install_custom_packages.sh"
+	chmod 744 $instpath/07_install_custom_packages.sh
+	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/07_install_custom_packages.sh"
 	
-	chmod 744 /home/install/08_install_pipeline.sh
-	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/08_install_pipeline.sh"
+	chmod 744 $instpath/08_install_pipeline.sh
+	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/08_install_pipeline.sh"
 	
-	chmod 744 /home/install/09_final_actions.sh
-	/bin/bash -c "source /home/install/09_final_actions.sh"
+	chmod 744 $instpath/09_final_actions.sh
+	/bin/bash -c "source $instpath/09_final_actions.sh"
 
 	# startup options for container
-	#/bin/bash -c "sed -i \"s/username/$username/g\" /home/startup.sh"
 	chmod -R 744 /home/startup.sh
 
 %startscript
