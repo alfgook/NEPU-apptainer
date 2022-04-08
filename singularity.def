@@ -100,8 +100,8 @@ From: ubuntu:18.04
 	chmod 744 /home/install/03_install_R.sh
 	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/03_install_R.sh"
 	
-	#chmod 744 /home/install/04_install_talys.sh
-	#/bin/bash -c "source /home/install/04_install_talys.sh"
+	chmod 744 /home/install/04_install_talys.sh
+	/bin/bash -c "source /home/install/04_install_talys.sh"
 	
 	chmod 744 /home/install/05_install_exfor.sh
 	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/05_install_exfor.sh"
@@ -115,10 +115,21 @@ From: ubuntu:18.04
 	chmod 744 /home/install/08_install_pipeline.sh
 	/bin/bash -c "source /home/install/rinstall_funs.sh && source /home/install/08_install_pipeline.sh"
 	
-	#chmod 744 /home/install/09_final_actions.sh
-	#/bin/bash -c "source /home/install/09_final_actions.sh"
+	chmod 744 /home/install/09_final_actions.sh
+	/bin/bash -c "source /home/install/09_final_actions.sh"
 
 	# startup options for container
 	#/bin/bash -c "sed -i \"s/username/$username/g\" /home/startup.sh"
-	#chmod -R 744 /home/startup.sh
+	chmod -R 744 /home/startup.sh
+
+%startscript
+    echo "startscript is run"
+    /bin/bash -c "source /home/startup.sh"
+
+%runscript
+    echo "runscript is run"
+    echo "Container was created $NOW"
+    echo "Arguments received: $*"
+    exec echo "$@"
+    /bin/bash -c "source /home/startup.sh"
 
