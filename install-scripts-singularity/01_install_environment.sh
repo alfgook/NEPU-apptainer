@@ -25,10 +25,11 @@ chmod 777 "$instpath_R2"
 
 export DEBIAN_FRONTEND=noninteractive
 
-apt-get install -yq build-essentials
+apt-get install -yq apt-utils
+
+apt-get install -yq build-essential
 apt-get install -yq gfortran
 
-apt-get install -yq apt-utils
 apt-get install -yq lib32readline7
 apt-get install -yq libxml2
 apt-get install -yq libxml2-dev
@@ -37,6 +38,7 @@ apt-get install -yq libsasl2-dev
 apt-get install -yq gdebi-core
 apt-get install -yq wget
 apt-get install -yq curl
+apt-get install -yq unzip
 
 apt-get install -yq screen
 apt-get install -yq vim
@@ -47,4 +49,5 @@ apt-get install -yq rsync
 apt-get install -yq openssh-server
 
 apt-get install -yq locales
+
 sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen

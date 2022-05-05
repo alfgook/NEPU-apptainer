@@ -1,5 +1,5 @@
 ##################################################
-#       SET UP THE MONGODB DATABASE
+#       DOWNLOAD THE DATA FROM EXFOR
 ##################################################
 
 download_exfor() {
@@ -40,16 +40,9 @@ download_exfor "http://www.nucleardata.com/storage/repos/exfor/entries_E1842-F10
 download_exfor "http://www.nucleardata.com/storage/repos/exfor/entries_F1046-O0678.tar.xz"
 download_exfor "http://www.nucleardata.com/storage/repos/exfor/entries_O0679-V1002.tar.xz"
 
-# populate the database
+#The mongo data-base will be created by the user later on
 
-# the directory where the data is stored need to be writable
-mkdir -p "/data/db"
-#chmod -R 777 /data/db # according to https://git.embl.de/grp-bio-it/singularity-service-example
-
-# start the mongodb server
-mongod --fork --logpath /var/log/mongod.log
-
-# download and run MongoDB EXFOR creation script
+# download and prepare the MongoDB EXFOR creation script
 mkdir "$instpath_R2"
 chmod 777 "$instpath_R2"
 cd "$instpath_R2"
@@ -58,21 +51,3 @@ Rfile="$instpath_R2/createExforDb/create_exfor_mongodb.R"
 download_git_cust createExforDb 10c618b46ef402be1fc82a0e6583ea09fccae23003c23f99b1448fedc027c29f
 chmod -R 777 "$instpath_R2"
 sed -i -e "s|<PATH TO DIRECTORY WITH EXFOR ENTRIES>|$instpath_exfor_text|" "$Rfile"
-Rscript --no-save --vanilla "$Rfile" 
-
-if [ "$keep_Rcodes" != "yes" ]; then
-    rm -rf "$instpath_R2"
-fi
-
-# delete EXFOR master files if requested
-if [ "$keep_exfor" != "yes" ]; then
-    rm -rf "$instpath_exfor"
-else
-    mv "$instpath_exfor_text" "$instpath/exfortmp"
-    rm -rf "$instpath_exfor"
-    mv "$instpath/exfortmp" "$instpath_exfor"
-fi
-
-# now we're done with creating the data-base, so shutdown the mongod
-# we shoudl do this so we can restart it when starting the container
-mongod --shutdown

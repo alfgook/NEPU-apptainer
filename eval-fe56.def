@@ -2,9 +2,6 @@ Bootstrap: docker
 From: ubuntu:18.04
 
 %files
-    # copy configuration
-	#config.sh /home/install
-	#chmod 744 /home/install/config.sh
 
 	# copy common functions used in the various steps
 	install-scripts-singularity/rinstall_funs.sh /home
@@ -12,24 +9,42 @@ From: ubuntu:18.04
 	install-scripts-singularity/02_install_mongodb.sh /home
 	install-scripts-singularity/03_install_R.sh /home
 	install-scripts-singularity/04_install_talys.sh /home
-	install-scripts-singularity/05_install_exfor.sh /home
+	install-scripts-singularity/05_download_exfor_data.sh /home
 	install-scripts-singularity/06_prepare_user.sh /home
 	install-scripts-singularity/07_install_custom_packages.sh /home
 	install-scripts-singularity/08_install_pipeline.sh /home
 	install-scripts-singularity/09_final_actions.sh /home
-	startup.sh /home
+	install-scripts-singularity/startup.sh /home
+	install-scripts-singularity/build_EXFOR_mongoDB.sh /home
+	install-scripts-singularity/start_EXFOR_mongoDB.sh /home
+	install-scripts-singularity/install_OMPI.sh /home
+	install-scripts-singularity/install_clusterTALYS_mpi.sh /home
 
 %environment
-    #export OMPI_DIR=/opt/ompi
-    #export SINGULARITY_OMPI_DIR=$OMPI_DIR
-    #export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
-    #export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
 
+    export instpath="/opt/pipeline/install"
+	export instpath_R="$instpath/Rpackages"
+	export instpath_R2="$instpath/Rcode"
+	export instpath_DL="$instpath/downloads"
+	export instpath_exfor="$instpath/exfor"
+	export instpath_exfor_text="$instpath_exfor/text"
+
+	export OMPI_DIR=/opt/ompi
+	export PATH=$OMPI_DIR/bin:$PATH
+	export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+	
+	export maxNumCPU=32
+
+	export repourl_R="https://cran.rstudio.com"
+	export gitrepo="https://github.com/gschnabel"
 
 %post
     ##################################################
 	#       CONFIGURATION VARIABLES
 	##################################################
+
+	# select the open-mpi version to be installed
+	export OMPI_VERSION=4.0.0
 
 	# user account inside the container
 	export username="username"
@@ -72,6 +87,10 @@ From: ubuntu:18.04
 	export extGID=1000
 	export maxNumCPU=32
 
+	export OMPI_DIR=/opt/ompi
+	export PATH=$OMPI_DIR/bin:$PATH
+	export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+
 	##################################################
 	#       IMAGE BUILDING
 	##################################################
@@ -83,16 +102,28 @@ From: ubuntu:18.04
 	mv /home/02_install_mongodb.sh .
 	mv /home/03_install_R.sh .
 	mv /home/04_install_talys.sh .
-	mv /home/05_install_exfor.sh .
+	mv /home/05_download_exfor_data.sh .
 	mv /home/06_prepare_user.sh .
 	mv /home/07_install_custom_packages.sh .
 	mv /home/08_install_pipeline.sh .
 	mv /home/09_final_actions.sh .
+	mv /home/startup.sh .
+	mv /home/install_OMPI.sh .
+	mv /home/install_clusterTALYS_mpi.sh .
+
+	mv /home/build_EXFOR_mongoDB.sh /usr/local/bin
+	chmod 755 /usr/local/bin/build_EXFOR_mongoDB.sh
+
+	mv /home/start_EXFOR_mongoDB.sh /usr/local/bin
+	chmod 755 /usr/local/bin/start_EXFOR_mongoDB.sh
 
 	chmod 744 $instpath/rinstall_funs.sh
 
 	chmod 744 $instpath/01_install_environment.sh
 	/bin/bash -c "source $instpath/01_install_environment.sh"
+
+	chmod 744 $instpath/install_OMPI.sh
+	/bin/bash -c "source $instpath/install_OMPI.sh"
 
 	chmod 744 $instpath/02_install_mongodb.sh
 	/bin/bash -c "source $instpath/02_install_mongodb.sh"
@@ -103,32 +134,37 @@ From: ubuntu:18.04
 	chmod 744 $instpath/04_install_talys.sh
 	/bin/bash -c "source $instpath/04_install_talys.sh"
 	
-	chmod 744 $instpath/05_install_exfor.sh
-	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/05_install_exfor.sh"
-	
-	chmod 744 $instpath/06_prepare_user.sh
-	/bin/bash -c "source $instpath/06_prepare_user.sh"
+	chmod 744 $instpath/05_download_exfor_data.sh
+	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/05_download_exfor_data.sh"
 
 	chmod 744 $instpath/07_install_custom_packages.sh
 	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/07_install_custom_packages.sh"
 	
 	chmod 744 $instpath/08_install_pipeline.sh
 	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/08_install_pipeline.sh"
-	
-	chmod 744 $instpath/09_final_actions.sh
-	/bin/bash -c "source $instpath/09_final_actions.sh"
+
+	chmod 744 $instpath/install_clusterTALYS_mpi.sh
+	/bin/bash -c "source $instpath/install_clusterTALYS_mpi.sh"
 
 	# startup options for container
-	chmod -R 744 /home/startup.sh
+	#chmod -R 744 $instpath/startup.sh
+	#/bin/bash -c "source $instpath/startup.sh"
+
+    #mkdir -p /tmp/sshd
+	#ln -s /tmp/sshd /run/sshd
+
+	#service ssh start
 
 %startscript
     echo "startscript is run"
-    /bin/bash -c "source /home/startup.sh"
+    #/bin/bash -c "source $instpath/startup.sh"
+
+    #service ssh start
 
 %runscript
     echo "runscript is run"
     echo "Container was created $NOW"
     echo "Arguments received: $*"
-    exec echo "$@"
-    /bin/bash -c "source /home/startup.sh"
+    #exec echo "$@"
+    #/bin/bash -c "source $instpath/startup.sh"
 

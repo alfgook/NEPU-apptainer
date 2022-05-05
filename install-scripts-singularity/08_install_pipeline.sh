@@ -2,7 +2,7 @@
 #       DOWNLOAD THE PIPELINE 
 ##################################################
 
-cd "/home/$username"
+cd "/opt/pipeline"
 download_git_cust_alt eval-fe56 devh
 
 # function to update the paths in the config file
@@ -21,8 +21,8 @@ update_config "eval-fe56/config.R.fulleval"
 sed -i 's/setwd("[^"]*")/setwd("\/home\/'"$username"'\/eval-fe56")/' "eval-fe56/run_pipeline.R"
 
 # create an exemplary calculation directory
-cd "/home/$username"
+cd "/opt/pipeline"
 mkdir "calcdir"
 mkdir "remcalcdir"
 mkdir "talysResults"
-chown -R "$username:$username" eval-fe56 calcdir remcalcdir talysResults
+#chown -R "$username:$username" eval-fe56 calcdir remcalcdir talysResults
