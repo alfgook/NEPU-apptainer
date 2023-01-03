@@ -30,6 +30,14 @@ apt-get install -yq apt-utils
 apt-get install -yq build-essential
 apt-get install -yq gfortran
 
+
+# sudo is needed for testing blas versions
+apt-get install -yq sudo
+# optimized openblas
+apt-get install -yq libopenblas-base libopenblas0-openmp libopenblas0-pthread libopenblas0-serial
+# Automatically Tuned Linear Algebra Software ATLAS
+apt-get install libatlas3-base liblapack3
+
 apt-get install -yq lib32readline7
 apt-get install -yq libxml2
 apt-get install -yq libxml2-dev
