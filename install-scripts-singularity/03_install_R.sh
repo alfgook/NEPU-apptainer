@@ -10,11 +10,32 @@
 #apt-get install -yq r-base=4.1.3-1.2004.0
 
 #for ubuntu 18.04
+#export DEBIAN_FRONTEND=noninteractive
+#apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+#echo "deb [ arch=amd64 ] https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r-project-3.5.list
+#apt-get update
+#apt-get install -yq r-base=3.6.3-1bionic
+
+#for ubuntu 22.04
+
+#apt-get update -qq
+## install two helper packages we need
+#apt-get install -yq --no-install-recommends software-properties-common dirmngr
+## add the signing key (by Michael Rutter) for these repos
+## To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc 
+## Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
+#wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+#add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+#apt-get update
+#apt-get install -yq --no-install-recommends r-base=4.2.2.20221110-1.2204.0
+
+# for ubuntu 22.04
 export DEBIAN_FRONTEND=noninteractive
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-echo "deb [ arch=amd64 ] https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r-project-3.5.list
+echo "deb [ arch=amd64 ] https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" | tee /etc/apt/sources.list.d/r-project-4.2.list
 apt-get update
-apt-get install -yq r-base=3.6.3-1bionic
+apt-get install -yq r-base=4.2.2.20221110-1.2204.0
+
 
 cd "$instpath_R"
 
