@@ -19,6 +19,7 @@ instpkg_cran digest
 instpkg_cran ggplot2
 instpkg_cran mvtnorm
 instpkg_cran hetGP
+instpkg_cran optimParallel
 
 if [ "$keep_Rcodes" != "yes" ]; then
     rm -rf "$instpath_R"
