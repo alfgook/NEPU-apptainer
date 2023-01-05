@@ -30,7 +30,7 @@ apt-get install -yq apt-utils
 apt-get install -yq build-essential
 apt-get install -yq gfortran
 
-# install alternatives for BLAS, the default will be set to openblas-pthread
+# install alternatives for BLAS, the default will be set to libopenblas0-pthread
 # which is the fastest tested on 11th Gen Intel® Core™ i7-1185G7 @ 3.00GHz × 8
 
 # sudo is needed for testing BLAS versions

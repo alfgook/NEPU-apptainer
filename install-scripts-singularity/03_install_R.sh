@@ -3,38 +3,11 @@
 ##################################################
 
 # for ubuntu 20.04
-#export DEBIAN_FRONTEND=noninteractive
-#apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-#echo "deb [ arch=amd64 ] https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" | tee /etc/apt/sources.list.d/r-project-3.5.list
-#apt-get update
-#apt-get install -yq r-base=4.1.3-1.2004.0
-
-#for ubuntu 18.04
-#export DEBIAN_FRONTEND=noninteractive
-#apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-#echo "deb [ arch=amd64 ] https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r-project-3.5.list
-#apt-get update
-#apt-get install -yq r-base=3.6.3-1bionic
-
-#for ubuntu 22.04
-
-#apt-get update -qq
-## install two helper packages we need
-#apt-get install -yq --no-install-recommends software-properties-common dirmngr
-## add the signing key (by Michael Rutter) for these repos
-## To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc 
-## Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
-#wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
-#add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
-#apt-get update
-#apt-get install -yq --no-install-recommends r-base=4.2.2.20221110-1.2204.0
-
-# for ubuntu 22.04
 export DEBIAN_FRONTEND=noninteractive
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 echo "deb [ arch=amd64 ] https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" | tee /etc/apt/sources.list.d/r-project-4.2.list
 apt-get update
-apt-get install -yq r-base=4.2.2.20221110-1.2204.0
+apt-get install -yq r-base=4.2*
 
 
 cd "$instpath_R"
@@ -62,3 +35,18 @@ fi
 #gdebi --n "rstudio-server-1.1.463-amd64.deb"
 #rm "rstudio-server-1.1.463-amd64.deb"
 
+export RSTUDIO_VERSION=1.2.5033
+# this version of rstudio-server depends on a deprecated package
+# I don't manage to get newer versions of rstudio-server to run on
+# the read only file-system
+wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb
+apt-get install ./libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb
+rm -f libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb
+
+cd "$instpath_DL"
+wget \
+    --no-verbose \
+    -O rstudio-server.deb \
+    "https://download2.rstudio.org/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb"
+  gdebi -n rstudio-server.deb
+  rm -f rstudio-server.deb
