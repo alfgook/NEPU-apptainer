@@ -13,7 +13,8 @@ instpkg_cust talysExforMapping 5ac8f35314ff5c411cf4409ac48339b35784ac8de250be1de
 instpkg_cust TALYSeval 963bc700027d16f33c06bb9194bf95b1e1512b6eeddfc05190d1a3ce32ae4f88
 instpkg_cust exforUncertainty c917f70ac4520a0aef2cca8479e8e28644c8ab3c1062d439a7af9fad2d25a38a
 #instpkg_cust_alt nucdataBaynet reduced_gp
-instpkg_cust_alt nucdataBaynet dev
+#instpkg_cust_alt nucdataBaynet dev
+instpkg_cust_alt2 nucdataBaynet version-09Jan2023
 
 instpkg_cust_alt clusterTALYS master
 
