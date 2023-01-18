@@ -1,5 +1,5 @@
 instpkg_cran() {
-    R --no-save -e "install.packages(\"$1\", repos=\"$repourl_R\")"
+    R --no-save -e "install.packages(\"$1\", repos=\"$repourl_R\", lib=\"/usr/lib/R/site-library\")"
 }
 
 
@@ -12,7 +12,7 @@ instpkg_cust() {
     rm temp.zip
     mydir=`ls -1`
     if [[ "$mydir" == "$1"* ]]; then
-        R CMD INSTALL "$mydir"
+        R CMD INSTALL -l /usr/lib/R/site-library "$mydir"
         mypath="`pwd`/$mydir"
         cd "$curdir"
         cp -r "$mypath" "$1" 
@@ -33,7 +33,7 @@ instpkg_cust_alt() {
     rm temp.zip
     mydir=`ls -1`
     if [[ "$mydir" == "$1"* ]]; then
-        R CMD INSTALL "$mydir"
+        R CMD INSTALL -l /usr/lib/R/site-library "$mydir"
         mypath="`pwd`/$mydir"
         cd "$curdir"
         cp -r "$mypath" "$1" 
@@ -54,7 +54,7 @@ instpkg_cust_alt2() {
     rm temp.zip
     mydir=`ls -1`
     if [[ "$mydir" == "$1"* ]]; then
-        R CMD INSTALL "$mydir"
+        R CMD INSTALL -l /usr/lib/R/site-library "$mydir"
         mypath="`pwd`/$mydir"
         cd "$curdir"
         cp -r "$mypath" "$1" 
