@@ -29,6 +29,9 @@ From: ubuntu:20.04
 	install-scripts-singularity/rstudio_auth.sh /usr/lib/rstudio-server/bin/rstudio_auth
 	install-scripts-singularity/start-rstudio.sh /usr/lib/rstudio-server/bin/start-rstudio
 
+	# copy the script to create the exfor mongoDB
+	install-scripts-singularity/create_exfor_mongodb.R /opt/pipeline/install/Rcode/createExforDb/
+
 %environment
 
 	export PATH=/usr/lib/rstudio-server/bin:${PATH}
@@ -154,12 +157,6 @@ From: ubuntu:20.04
 
 	chmod 744 $instpath/07_install_custom_packages.sh
 	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/07_install_custom_packages.sh"
-
-#	chmod 744 $instpath/08_install_pipeline.sh
-#	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/08_install_pipeline.sh"
-
-#	#chmod 744 $instpath/install_clusterTALYS_mpi.sh
-#	#/bin/bash -c "source $instpath/install_clusterTALYS_mpi.sh"
 
 	# temporary until talysR put on github
 	cd /opt/pipeline/install/

@@ -1,11 +1,5 @@
 #!/bin/bash
 
-
-#if [ $1=="" ]; then
-#	echo "must provide a path to store the data in! exiting...."
-#	exit 1;
-#fi
-
 if [ -d "$1" ]
 then
 	source $instpath/rinstall_funs.sh
@@ -20,8 +14,8 @@ then
 
 	#run MongoDB EXFOR creation script
 	Rfile="$instpath_R2/createExforDb/create_exfor_mongodb.R"
-	Rscript --no-save --vanilla "$Rfile"
+	Rscript --no-save --vanilla "$Rfile" $instpath_exfor/X4all
 else
-	echo "Error: $dir not found or is symlink to $(readlink -f ${dir}). You must provide a valid directory."
+	echo "Error: $dir not found or is symlink to $(readlink -f ${dir}). You must provide a valid directory to place the data base in."
 fi
 
