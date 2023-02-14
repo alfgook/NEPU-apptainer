@@ -18,7 +18,7 @@ instpkg_cust exforUncertainty c917f70ac4520a0aef2cca8479e8e28644c8ab3c1062d439a7
 #instpkg_cust_alt nucdataBaynet dev
 instpkg_cust_alt2 nucdataBaynet version-09Jan2023
 
-instpkg_cust_alt clusterTALYS master
+#instpkg_cust_alt clusterTALYS master
 
 if [ "$keep_Rcodes" != "yes" ]; then
     rm -rf "$instpath_R"

@@ -21,10 +21,17 @@ instpkg_cran Rcpp
 instpkg_cran mongolite
 instpkg_cran digest
 instpkg_cran ggplot2
+instpkg_cran ggnewscale
 instpkg_cran mvtnorm
 instpkg_cran hetGP
 instpkg_cran stringr
 instpkg_cran moments
+instpkg_cran optimParallel
+instpkg_cran mvnfast
+instpkg_cran latex2exp
+instpkg_cran ggridges
+instpkg_cran reshape2
+instpkg_cran gplots
 R --no-save -e "install.packages(\"Rmpi\", repos=\"$repourl_R\", lib=\"/usr/lib/R/site-library\", configure.args=c(\"--with-Rmpi-include=$OMPI_DIR/include\",\"--with-Rmpi-libpath=$OMPI_DIR/lib\",\"--with-Rmpi-type=OPENMPI\"))"
 
 if [ "$keep_Rcodes" != "yes" ]; then

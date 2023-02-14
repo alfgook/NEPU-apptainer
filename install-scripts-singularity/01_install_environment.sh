@@ -2,8 +2,8 @@
 #       CONFIGURE OPTIONS
 ##################################################
 
-mkdir "$HOME/.ssh"
-echo "StrictHostKeyChecking=accept-new" >> "$HOME/.ssh/config"
+#mkdir "$HOME/.ssh"
+#echo "StrictHostKeyChecking=accept-new" >> "$HOME/.ssh/config"
 apt-get update
 
 ##################################################
