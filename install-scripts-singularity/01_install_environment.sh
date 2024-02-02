@@ -57,6 +57,7 @@ apt-get install -yq git
 apt-get install -yq sshpass
 apt-get install -yq rsync
 apt-get install -yq openssh-server
+apt-get install -yq slurm-client
 
 apt-get install -yq locales
 

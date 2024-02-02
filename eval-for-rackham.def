@@ -1,0 +1,173 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%files
+
+	# copy common functions used in the various steps
+	install-scripts-singularity/rinstall_funs.sh /opt
+	install-scripts-singularity/01_install_environment.sh /opt
+	install-scripts-singularity/02_install_mongodb.sh /opt
+	install-scripts-singularity/03_install_R.sh /opt
+	install-scripts-singularity/04_install_talys.sh /opt
+	install-scripts-singularity/05_download_exfor_data.sh /opt
+	install-scripts-singularity/06_prepare_user.sh /opt
+	install-scripts-singularity/07_install_custom_packages.sh /opt
+	install-scripts-singularity/08_install_pipeline.sh /opt
+	install-scripts-singularity/09_final_actions.sh /opt
+	install-scripts-singularity/startup.sh /opt
+	install-scripts-singularity/build_EXFOR_mongoDB.sh /opt
+	install-scripts-singularity/start_EXFOR_mongoDB.sh /opt
+	install-scripts-singularity/install_OMPI.sh /opt
+	install-scripts-singularity/install_clusterTALYS_mpi.sh /opt
+	install-scripts-singularity/compare-blas.sh /usr/local/bin
+	install-scripts-singularity/test_blas.R /usr/local/bin
+
+	# copy the talysR tar-file: temporary until I'm sure I can put it on github
+	install-scripts-singularity/talysR_0.0.0.9000.tar.gz /opt/pipeline/install/
+
+	# copy utility functions for the rstudio server
+	install-scripts-singularity/rstudio_auth.sh /usr/lib/rstudio-server/bin/rstudio_auth
+	install-scripts-singularity/start-rstudio.sh /usr/lib/rstudio-server/bin/start-rstudio
+
+	# copy the script to create the exfor mongoDB
+	install-scripts-singularity/create_exfor_mongodb.R /opt/pipeline/install/Rcode/createExforDb/
+
+%environment
+
+	export PATH=/usr/lib/rstudio-server/bin:${PATH}
+
+    export instpath="/opt/pipeline/install"
+	export instpath_R="$instpath/Rpackages"
+	export instpath_R2="$instpath/Rcode"
+	export instpath_DL="$instpath/downloads"
+	export instpath_exfor="$instpath/exfor"
+	export instpath_exfor_text="$instpath_exfor/text"
+
+	export OMPI_DIR=/opt/ompi
+	export PATH=$OMPI_DIR/bin:$PATH
+	export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+
+	export TALYSHOME=$instpath/talys/
+	
+	export maxNumCPU=32
+
+	export repourl_R="https://cran.rstudio.com"
+	export gitrepo="https://github.com/gschnabel"
+
+%post
+    ##################################################
+	#       CONFIGURATION VARIABLES
+	##################################################
+
+	# select the open-mpi version to be installed
+	export OMPI_VERSION=4.0.2
+
+	# path to use for downloaded files
+	export instpath="/opt/pipeline/install"
+
+	# url to the talys archive
+	# if talysurl="", talys will not be downloaded
+	# export talysurl="http://www.nucleardata.com/storage/repos/talys/talys1.95.tar"
+	export talysurl="https://tendl.web.psi.ch/tendl_2019/talys/talys1.95.tar"
+
+
+	# installation files to keep
+
+	# keep the source code of custom R packages
+	# after download and installation
+	export keep_Rcodes="yes"
+
+	# keep the EXFOR master files after
+	# they have been fed into the MongoDB database
+	export keep_exfor="no"
+
+	##################################################
+	#       SPECIFIC INSTALLATION PATHS 
+	##################################################
+
+	export instpath="/opt/pipeline/install"
+	export instpath_R="$instpath/Rpackages"
+	export instpath_R2="$instpath/Rcode"
+	export instpath_DL="$instpath/downloads"
+	export instpath_exfor="$instpath/exfor"
+	export instpath_exfor_text="$instpath_exfor/text"
+
+	export repourl_R="https://cran.rstudio.com"
+	export gitrepo="https://github.com/gschnabel"
+
+	# user ID and group ID of the associated
+	# user account outside the container
+	export extUID=1000
+	export extGID=1000
+	export maxNumCPU=32
+
+	export OMPI_DIR=/opt/ompi
+	export PATH=$OMPI_DIR/bin:$PATH
+	export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+
+	##################################################
+	#       IMAGE BUILDING
+	##################################################
+
+	mkdir -p $instpath
+	cd $instpath
+
+
+	mkdir -p $instpath
+	cd $instpath
+	mv /opt/rinstall_funs.sh .
+	mv /opt/01_install_environment.sh .
+	mv /opt/02_install_mongodb.sh .
+	mv /opt/03_install_R.sh .
+	mv /opt/04_install_talys.sh .
+	mv /opt/05_download_exfor_data.sh .
+	mv /opt/06_prepare_user.sh .
+	mv /opt/07_install_custom_packages.sh .
+	mv /opt/08_install_pipeline.sh .
+	mv /opt/09_final_actions.sh .
+	mv /opt/startup.sh .
+	mv /opt/install_OMPI.sh .
+	mv /opt/install_clusterTALYS_mpi.sh .
+
+	chmod 755 /usr/local/bin/compare-blas.sh
+
+	mv /opt/build_EXFOR_mongoDB.sh /usr/local/bin
+	chmod 755 /usr/local/bin/build_EXFOR_mongoDB.sh
+
+	mv /opt/start_EXFOR_mongoDB.sh /usr/local/bin
+	chmod 755 /usr/local/bin/start_EXFOR_mongoDB.sh
+
+	chmod 744 $instpath/rinstall_funs.sh
+
+	chmod 744 $instpath/01_install_environment.sh
+	/bin/bash -c "source $instpath/01_install_environment.sh"
+
+	chmod 744 $instpath/install_OMPI.sh
+	/bin/bash -c "source $instpath/install_OMPI.sh"
+
+	chmod 744 $instpath/02_install_mongodb.sh
+	/bin/bash -c "source $instpath/02_install_mongodb.sh"
+
+	chmod 744 $instpath/03_install_R.sh
+	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/03_install_R.sh"
+
+	chmod 744 $instpath/04_install_talys.sh
+	/bin/bash -c "source $instpath/04_install_talys.sh"
+
+	chmod 744 $instpath/05_download_exfor_data.sh
+	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/05_download_exfor_data.sh"
+
+	chmod 744 $instpath/07_install_custom_packages.sh
+	/bin/bash -c "source $instpath/rinstall_funs.sh && source $instpath/07_install_custom_packages.sh"
+
+	# temporary until talysR put on github
+	cd /opt/pipeline/install/
+	R CMD INSTALL -l /usr/lib/R/site-library talysR_0.0.0.9000.tar.gz
+
+%runscript
+    echo "runscript is run"
+    echo "Container was created $NOW"
+    echo "Arguments received: $*"
+    #exec echo "$@"
+    #/bin/bash -c "source $instpath/startup.sh"
+
