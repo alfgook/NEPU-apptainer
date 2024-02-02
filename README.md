@@ -9,13 +9,18 @@ Fe56 available at
 
 The manual available [here](https://github.com/gschnabel/eval-fe56-docker/raw/master/manual/build/manual.pdf)
 provides installation instructions and further details
-regarding the evaluation pipeline.
+regarding the evaluation pipeline. These are however largely outdated.
 
 If you are already familiar with Apptainer/singularity, you may just jump into exploring the pipeline.
 Clone this repository and then create the Docker image by launching from inside the repository folder:
 ```
 singularity build --fakeroot eval-fe56.sif eval-fe56.def
 ```
+
+The most up to date version of the definition file is eval-for-rackham.def which builds a version
+which can be run either locally (tested on a laptop running Ubuntu 20.04.6-LTS) or an HPC cluster
+(tested on the rackham cluster at UPPMAX).
+
 During the image building process, several components, such as the nuclear model code TALYS,
 and (a not up-to-date version of) the EXFOR library, are downloaded.
 The final size of the image is about 9 GBytes and depending on your internet speed
@@ -29,8 +34,6 @@ singularity shell eval-fe56.sif
 
 Now you can use command line tools to poke aorund.
 The manual provides more details on the directory structure inside the container.
-Alternatively, you can open a web browser and go to <http://localhost:9090>
-and use `username` and `password` as username and password.
 
 
 The full evaluation takes significant time and resources.  Please ensure that `<outdata>` and
