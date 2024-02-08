@@ -21,12 +21,9 @@ The most up to date version of the definition file is eval-for-rackham.def which
 which can be run either locally (tested on a laptop running Ubuntu 20.04.6-LTS) or an HPC cluster
 (tested on the rackham cluster at UPPMAX).
 
-The git repo contains a number of branches, the most up to date development branch is rackham
-
-During the image building process, several components, such as the nuclear model code TALYS,
-and (a not up-to-date version of) the EXFOR library, are downloaded.
-The final size of the image is about 9 GBytes and depending on your internet speed
-you can anticipate the building process to take 30-60 minutes.
+During the image building process, several components, such as the nuclear model code TALYS are downloaded.
+The final size of the image is about 1.9 GBytes and depending on your internet speed
+you can anticipate the building process to take 10-20 minutes.
 
 
 To create a container and to launch an interactive terminal session inside, execute:
