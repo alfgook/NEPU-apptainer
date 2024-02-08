@@ -14,18 +14,15 @@ regarding the evaluation pipeline. These are however largely outdated.
 If you are already familiar with Apptainer/singularity, you may just jump into exploring the pipeline.
 Clone this repository and then create the Docker image by launching from inside the repository folder:
 ```
-singularity build --fakeroot eval-fe56.sif eval-fe56.def
+apptainer build --fakeroot eval-fe56.sif eval-fe56.def
 ```
 
 The most up to date version of the definition file is eval-for-rackham.def which builds a version
 which can be run either locally (tested on a laptop running Ubuntu 20.04.6-LTS) or an HPC cluster
 (tested on the rackham cluster at UPPMAX).
 
-<<<<<<< HEAD
 The git repo contains a number of branches, the most up to date development branch is rackham
 
-=======
->>>>>>> rackham-with-rstudio
 During the image building process, several components, such as the nuclear model code TALYS,
 and (a not up-to-date version of) the EXFOR library, are downloaded.
 The final size of the image is about 9 GBytes and depending on your internet speed
@@ -34,7 +31,7 @@ you can anticipate the building process to take 30-60 minutes.
 
 To create a container and to launch an interactive terminal session inside, execute:
 ```
-singularity shell eval-fe56.sif
+apptainer shell eval-fe56.sif
 ```
 
 Now you can use command line tools to poke aorund.
