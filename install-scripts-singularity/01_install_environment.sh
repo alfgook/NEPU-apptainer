@@ -2,8 +2,8 @@
 #       CONFIGURE OPTIONS
 ##################################################
 
-mkdir "$HOME/.ssh"
-echo "StrictHostKeyChecking=accept-new" >> "$HOME/.ssh/config"
+#mkdir "$HOME/.ssh"
+#echo "StrictHostKeyChecking=accept-new" >> "$HOME/.ssh/config"
 apt-get update
 
 ##################################################
@@ -57,6 +57,7 @@ apt-get install -yq git
 apt-get install -yq sshpass
 apt-get install -yq rsync
 apt-get install -yq openssh-server
+apt-get install -yq slurm-client
 
 apt-get install -yq locales
 
