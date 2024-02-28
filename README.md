@@ -25,7 +25,6 @@ During the image building process, several components, such as the nuclear model
 The final size of the image is about 1.9 GBytes and depending on your internet speed
 you can anticipate the building process to take 10-20 minutes.
 
-
 To create a container and to launch an interactive terminal session inside, execute:
 ```
 apptainer shell eval-fe56.sif

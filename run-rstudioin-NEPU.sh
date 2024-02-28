@@ -2,10 +2,10 @@
 
 # If you want to change the port or the adress uncomment these lines
 # export SINGULARITYENV_RSTUDIO_PORT=9090
-# export SINGULARITYENV_RSTUIO_IP=127.0.0.1
+# export SINGULARITYENV_RSTUDIO_IP=127.0.0.1
 # or
 # export APPTAINERENV_RSTUDIO_PORT=9090
-# export APPTAINERENV_RSTUIO_IP=127.0.0.1
+# export APPTAINERENV_RSTUDIO_IP=127.0.0.1
 
 
 # temporary directories where rstudio can write files
